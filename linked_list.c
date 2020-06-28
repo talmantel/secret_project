@@ -28,7 +28,7 @@ void * search(list_t * list, (*compare)(void *find, void *content), void *toFind
     node_t * current = list->head;
     while (current != NULL){
         if (compare(toFind, current->content)){
-            return current;
+            return current->content;
         }
         current = current->next;
     }
