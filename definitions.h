@@ -1,0 +1,13 @@
+#ifndef MMN14_DEFINITIONS_H
+#define MMN14_DEFINITIONS_H
+
+typedef enum {FALSE, TRUE} BOOL;
+typedef enum {SUCCESS, ERROR} RESULT;
+#define MAX_LINE_LENGTH 80
+#define INPUT_FILE_SUFFIX ".as"
+#define ENTRIES_FILE_SUFFIX ".ent"
+#define EXTERNALS_FILE_SUFFIX ".ext"
+#define MAIN_OUTPUT_FILE_SUFFIX ".ob"
+
+#endif //MMN14_DEFINITIONS_H
+
