@@ -7,11 +7,14 @@
 #include "second_pass.h"
 #include "output.h"
 
-void processFile(char *baseFileName, LIST symbolsList, LIST instructionsList, LIST dataList, LIST entriesList);
+void processFile(char *baseFileName, list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList);
 
 int main(int argc, char** argv) {
 
-    LIST symbolsList, instructionsList, dataList, entriesList;
+    list_t *symbolsList;
+    list_t *instructionsList;
+    list_t *dataList;
+    list_t *entriesList;
 
     /* process the files received as arguments */
     int i = 1;
@@ -40,7 +43,7 @@ int main(int argc, char** argv) {
  * run assembler on a file
  * param baseFileName - base name of file to run the assembler on
  */
-void processFile(char *baseFileName, LIST symbolsList, LIST instructionsList, LIST dataList, LIST entriesList) {
+void processFile(char *baseFileName, list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList) {
     RESULT firstPassResult, secondPassResult;
     char *fullInputFileName;
     FILE *inputFile;

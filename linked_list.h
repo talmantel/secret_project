@@ -1,21 +1,20 @@
 #ifndef MMN14_LINKED_LIST_H
 #define MMN14_LINKED_LIST_H
 
-struct {
+typedef struct node{
     void *content;
-    struct sNODE *next;
-} sNODE;
+    struct node * next;
+} node_t;
 
-typedef struct sNODE *NODE;
-typedef struct {
+typedef struct list{
     int length;
-    NODE head;
-    NODE tail;
-} *LIST;
+    node_t * head;
+    node_t * tail;
+} list_t;
 
-LIST initLinkedList();
-void addNode(LIST list, void *content);
-void *search(LIST list, BOOL (*compare)(void *find, void *content), void *toFind);
-void freeList(LIST list);
+list_t * initLinkedList();
+void addNode(list_t * list, void *content);
+void *search(list_t * list, int (*compare)(void *find, void *content), void *toFind);
+void freeList(list_t * list);
 
 #endif //MMN14_LINKED_LIST_H
