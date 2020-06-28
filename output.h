@@ -5,6 +5,6 @@
 #ifndef MMN14_OUTPUT_H
 #define MMN14_OUTPUT_H
 
-void outputFiles(char *baseFileName, LIST symbolsList, LIST instructionsList, LIST dataList, LIST entriesList);
+void outputFiles(char *baseFileName, list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList);
 
 #endif //MMN14_OUTPUT_H

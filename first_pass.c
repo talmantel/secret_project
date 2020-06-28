@@ -6,7 +6,7 @@
 
 int finishReadingLine(FILE *file);
 
-RESULT firstPass(FILE *file, LIST symbolsList, LIST instructionsList, LIST dataList, LIST entriesList){
+RESULT firstPass(FILE *file, list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList){
     char line[MAX_LINE_LENGTH+2];
     int lineNum = 1;
     RESULT result = SUCCESS;

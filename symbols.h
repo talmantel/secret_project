@@ -15,7 +15,7 @@ typedef struct{
 } *SYMBOL;
 
 
-BOOL compareSymbol(char *find, SYMBOL content);
+int compareSymbol(char *find, SYMBOL content);
 
 
 #endif //MMN14_SYMBOLS_H
