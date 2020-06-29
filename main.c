@@ -11,6 +11,7 @@
 #include "entries.h"
 #include "instructions.h"
 #include "symbols.h"
+#include "errors.h"
 
 void processFile(const char *baseFileName, list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList);
 
@@ -54,10 +55,8 @@ void processFile(const char *baseFileName, list_t *symbolsList, list_t *instruct
     FILE *inputFile;
 
     fullInputFileName = malloc((strlen(baseFileName) + strlen(INPUT_FILE_SUFFIX) + 1) * sizeof(char));
-    if(fullInputFileName == NULL){
-        fprintf(stderr, "FATAL ERROR: Out of memory\n");
-        exit(1);
-    }
+    if(fullInputFileName == NULL)
+        handleError(ERROR_OUT_OF_MEMORY);
 
     strcat(fullInputFileName, baseFileName);
     strcat(fullInputFileName, INPUT_FILE_SUFFIX);

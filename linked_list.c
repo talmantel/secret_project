@@ -1,11 +1,11 @@
+#include <stdlib.h>
 #include "linked_list.h"
+#include "errors.h"
 
 list_t * initLinkedList(){
     list_t * list = malloc(sizeof(list_t));
-    if(list == NULL){
-        fprintf(stderr, "FATAL ERROR: Out of memory\n");
-        exit(1);
-    }
+    if(list == NULL)
+        handleError(ERROR_OUT_OF_MEMORY);
 
     list->head = NULL;
     list->tail = NULL;
@@ -16,10 +16,8 @@ list_t * initLinkedList(){
 
 void addNode(list_t * list, void *content){
     node_t * newNode = malloc(sizeof(node_t));
-    if(newNode == NULL){
-        fprintf(stderr, "FATAL ERROR: Out of memory\n");
-        exit(1);
-    }
+    if(newNode == NULL)
+        handleError(ERROR_OUT_OF_MEMORY);
 
     newNode->content = content;
     newNode->next =NULL;
@@ -34,7 +32,7 @@ void addNode(list_t * list, void *content){
     list->length++;
 }
 
-void * search(list_t * list, (*equals)(void *find, void *content), void *toFind){
+void * search(list_t * list, int (*equals)(void *find, void *content), void *toFind){
     node_t * current = list->head;
     while (current != NULL){
         if (equals(toFind, current->content)){
