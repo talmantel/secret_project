@@ -53,7 +53,12 @@ void processFile(const char *baseFileName, list_t *symbolsList, list_t *instruct
     char *fullInputFileName;
     FILE *inputFile;
 
-    fullInputFileName = (char *) malloc(strlen(baseFileName) + strlen(INPUT_FILE_SUFFIX));
+    fullInputFileName = malloc((strlen(baseFileName) + strlen(INPUT_FILE_SUFFIX) + 1) * sizeof(char));
+    if(fullInputFileName == NULL){
+        fprintf(stderr, "FATAL ERROR: Out of memory\n");
+        exit(1);
+    }
+
     strcat(fullInputFileName, baseFileName);
     strcat(fullInputFileName, INPUT_FILE_SUFFIX);
 

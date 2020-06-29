@@ -2,6 +2,11 @@
 
 list_t * initLinkedList(){
     list_t * list = malloc(sizeof(list_t));
+    if(list == NULL){
+        fprintf(stderr, "FATAL ERROR: Out of memory\n");
+        exit(1);
+    }
+
     list->head = NULL;
     list->tail = NULL;
     list->length = 0;
@@ -11,6 +16,11 @@ list_t * initLinkedList(){
 
 void addNode(list_t * list, void *content){
     node_t * newNode = malloc(sizeof(node_t));
+    if(newNode == NULL){
+        fprintf(stderr, "FATAL ERROR: Out of memory\n");
+        exit(1);
+    }
+
     newNode->content = content;
     newNode->next =NULL;
 
