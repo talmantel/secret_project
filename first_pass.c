@@ -19,7 +19,7 @@ RESULT firstPass(FILE *file, list_t *symbolsList, list_t *instructionsList, list
         if (pos != NULL)
             *pos = '\0';
         else {
-            fprintf(stderr, "Error in line %d: line longer than maximum length (%d)", lineNum, MAX_LINE_LENGTH);
+            fprintf(stderr, "Error in line %d: line longer than maximum length (%d)\n", lineNum, MAX_LINE_LENGTH);
             result = ERROR;
             if(finishReadingLine(file) == EOF)
                 break;
