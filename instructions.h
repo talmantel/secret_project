@@ -17,20 +17,27 @@ typedef struct{
     unsigned int origin_reg: 3;
     ADDRESSING_TYPE origin_addressing: 2;
     unsigned int opcode: 6;
-} *INSTRUCTION;
+} instruction_t;
 
 typedef struct{
     unsigned int are_type: 3;
     unsigned int address: 21;
-} *ADDRESS;
+} address_t;
+
+typedef struct {
+    char *label;
+    int lineNumber;
+} label_t;
 
 typedef struct{
     WORD_TYPE type;
     union{
-        INSTRUCTION instruction;
-        ADDRESS address;
-        char *label;
+        instruction_t *instruction;
+        address_t *address;
+        label_t *label ;
     } content;
-} *WORD;
+} word_t;
+
+void freeWordContent(word_t *content);
 
 #endif //MMN14_INSTRUCTIONS_H

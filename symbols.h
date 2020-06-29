@@ -12,10 +12,12 @@ typedef struct{
     char *name;
     unsigned int address:21;
     SYMBOL_TYPE type;
-} *SYMBOL;
+} symbol_t;
 
 
-int compareSymbol(char *find, SYMBOL content);
+int compareSymbol(char *find, symbol_t *content);
+
+void freeSymbolContent(symbol_t *content);
 
 
 #endif //MMN14_SYMBOLS_H

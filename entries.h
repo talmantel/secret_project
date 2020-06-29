@@ -8,6 +8,8 @@
 typedef struct{
     char *name;
     unsigned int address:21;
-} *ENTRY;
+} entry_t;
+
+void freeEntryContent(entry_t *content);
 
 #endif //MMN14_ENTRIES_H

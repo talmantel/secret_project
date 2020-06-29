@@ -24,10 +24,10 @@ void addNode(list_t * list, void *content){
     list->length++;
 }
 
-void * search(list_t * list, (*compare)(void *find, void *content), void *toFind){
+void * search(list_t * list, (*equals)(void *find, void *content), void *toFind){
     node_t * current = list->head;
     while (current != NULL){
-        if (compare(toFind, current->content)){
+        if (equals(toFind, current->content)){
             return current->content;
         }
         current = current->next;
@@ -35,12 +35,13 @@ void * search(list_t * list, (*compare)(void *find, void *content), void *toFind
     return NULL;
 }
 
-void freeList(list_t * list){
+void freeList(list_t * list, void (*freeContent)(void *content)){
     node_t * current = list->head;
     node_t * temp;
     while (current != NULL){
         temp = current;
         current = temp->next;
+        freeContent(temp->content);
         free(temp);
     }
     free(list);

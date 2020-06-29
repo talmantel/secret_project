@@ -14,7 +14,7 @@ typedef struct list{
 
 list_t * initLinkedList();
 void addNode(list_t * list, void *content);
-void *search(list_t * list, int (*compare)(void *find, void *content), void *toFind);
-void freeList(list_t * list);
+void *search(list_t * list, int (*equals)(void *find, void *content), void *toFind);
+void freeList(list_t * list, void (*freeContent)(void *content));
 
 #endif //MMN14_LINKED_LIST_H

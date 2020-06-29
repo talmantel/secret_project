@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "definitions.h"
@@ -6,8 +7,12 @@
 #include "first_pass.h"
 #include "second_pass.h"
 #include "output.h"
+#include "data.h"
+#include "entries.h"
+#include "instructions.h"
+#include "symbols.h"
 
-void processFile(char *baseFileName, list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList);
+void processFile(const char *baseFileName, list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList);
 
 int main(int argc, char** argv) {
 
@@ -30,10 +35,10 @@ int main(int argc, char** argv) {
         i++;
 
         /* free allocated memory */
-        freeList(symbolsList);
-        freeList(instructionsList);
-        freeList(dataList);
-        freeList(entriesList);
+        freeList(symbolsList, freeSymbolContent);
+        freeList(instructionsList, freeWordContent);
+        freeList(dataList, freeDataContent);
+        freeList(entriesList, freeEntryContent);
     }
 
     return 0;
@@ -43,12 +48,14 @@ int main(int argc, char** argv) {
  * run assembler on a file
  * param baseFileName - base name of file to run the assembler on
  */
-void processFile(char *baseFileName, list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList) {
+void processFile(const char *baseFileName, list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList) {
     RESULT firstPassResult, secondPassResult;
     char *fullInputFileName;
     FILE *inputFile;
 
-    fullInputFileName = strcat(baseFileName, INPUT_FILE_SUFFIX);
+    fullInputFileName = (char *) malloc(strlen(baseFileName) + strlen(INPUT_FILE_SUFFIX));
+    strcat(fullInputFileName, baseFileName);
+    strcat(fullInputFileName, INPUT_FILE_SUFFIX);
 
     printf("Opening input file: '%s'\n", fullInputFileName);
 
@@ -70,5 +77,6 @@ void processFile(char *baseFileName, list_t *symbolsList, list_t *instructionsLi
         outputFiles(baseFileName, symbolsList, instructionsList, dataList, entriesList);
 
     fclose(inputFile);
+    free(fullInputFileName);
     printf("Done processing input file: '%s'\n\n\n", fullInputFileName);
 }
