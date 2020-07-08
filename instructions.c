@@ -4,15 +4,25 @@
 void freeWordContent(word_t *content){
     switch (content->type) {
         case WORD_TYPE_INSTRUCTION:
-            free(content->content.instruction);
+            freeInstructionContent(content->content.instruction);
             break;
         case WORD_TYPE_ADDRESS:
-            free(content->content.address);
+            freeAddressContent(content->content.address);
             break;
         case WORD_TYPE_LABEL:
-            free(content->content.label->label);
-            free(content->content.label);
+            freeLabelContent(content->content.label);
             break;
     }
     free(content);
+}
+
+void freeInstructionContent(instruction_t *instruction){
+    free(instruction);
+}
+void freeLabelContent(label_t *label){
+    free(label->label);
+    free(label);
+}
+void freeAddressContent(address_t *address){
+    free(address);
 }

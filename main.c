@@ -12,8 +12,9 @@
 #include "instructions.h"
 #include "symbols.h"
 #include "errors.h"
+#include "externals.h"
 
-void processFile(const char *baseFileName, list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList);
+void processFile(const char *baseFileName, list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList, list_t *externalsList);
 
 int main(int argc, char** argv) {
 
@@ -21,6 +22,7 @@ int main(int argc, char** argv) {
     list_t *instructionsList;
     list_t *dataList;
     list_t *entriesList;
+    list_t *externalsList;
 
     /* process the files received as arguments */
     int i = 1;
@@ -31,15 +33,17 @@ int main(int argc, char** argv) {
         instructionsList = initLinkedList();
         dataList = initLinkedList();
         entriesList = initLinkedList();
+        externalsList = initLinkedList();
 
-        processFile(*(argv+i), symbolsList, instructionsList, dataList, entriesList);
+        processFile(*(argv+i), symbolsList, instructionsList, dataList, entriesList, externalsList);
         i++;
 
         /* free allocated memory */
-        freeList(symbolsList, freeSymbolContent);
-        freeList(instructionsList, freeWordContent);
-        freeList(dataList, freeDataContent);
-        freeList(entriesList, freeEntryContent);
+        freeList(symbolsList, (void (*)(void *)) freeSymbolContent);
+        freeList(instructionsList, (void (*)(void *)) freeWordContent);
+        freeList(dataList, (void (*)(void *)) freeDataContent);
+        freeList(entriesList, (void (*)(void *)) freeEntryContent);
+        freeList(externalsList, (void (*)(void *)) freeExternalContent);
     }
 
     return 0;
@@ -49,7 +53,7 @@ int main(int argc, char** argv) {
  * run assembler on a file
  * param baseFileName - base name of file to run the assembler on
  */
-void processFile(const char *baseFileName, list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList) {
+void processFile(const char *baseFileName, list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList, list_t *externalsList) {
     RESULT firstPassResult, secondPassResult;
     char *fullInputFileName;
     FILE *inputFile;
@@ -58,15 +62,16 @@ void processFile(const char *baseFileName, list_t *symbolsList, list_t *instruct
     if(fullInputFileName == NULL)
         handleError(ERROR_OUT_OF_MEMORY);
 
-    strcat(fullInputFileName, baseFileName);
+    strcpy(fullInputFileName, baseFileName);
     strcat(fullInputFileName, INPUT_FILE_SUFFIX);
 
-    printf("Opening input file: '%s'\n", fullInputFileName);
+    printf("\n\nOpening input file: '%s'\n", fullInputFileName);
 
     inputFile = fopen(fullInputFileName, "r");
 
     if(inputFile == NULL) {
         fprintf(stderr, "Input file '%s' does not exist or cannot be opened!\n", fullInputFileName);
+        free(fullInputFileName);
         return;
     }
 
@@ -74,13 +79,14 @@ void processFile(const char *baseFileName, list_t *symbolsList, list_t *instruct
     firstPassResult = firstPass(inputFile, symbolsList, instructionsList, dataList, entriesList);
 
     printf("Running second pass on input file: '%s'\n", fullInputFileName);
-    secondPassResult = secondPass(symbolsList, instructionsList, dataList, entriesList);
+    secondPassResult = secondPass(symbolsList, instructionsList, entriesList, externalsList);
 
-    printf("Generating output files for input file: '%s'\n", fullInputFileName);
-    if(secondPassResult == SUCCESS && firstPassResult == SUCCESS)
-        outputFiles(baseFileName, symbolsList, instructionsList, dataList, entriesList);
+    if(secondPassResult == SUCCESS && firstPassResult == SUCCESS) {
+        printf("Generating output files for input file: '%s'\n", fullInputFileName);
+        outputFiles(baseFileName, symbolsList, instructionsList, dataList, entriesList, externalsList);
+    }
 
+    printf("Done processing input file: '%s'\n", fullInputFileName);
     fclose(inputFile);
     free(fullInputFileName);
-    printf("Done processing input file: '%s'\n\n\n", fullInputFileName);
 }

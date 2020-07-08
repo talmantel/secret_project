@@ -27,6 +27,7 @@ typedef struct{
 typedef struct {
     char *label;
     int lineNumber;
+    ADDRESSING_TYPE addressing_type;
 } label_t;
 
 typedef struct{
@@ -39,5 +40,8 @@ typedef struct{
 } word_t;
 
 void freeWordContent(word_t *content);
+void freeInstructionContent(instruction_t *content);
+void freeLabelContent(label_t *content);
+void freeAddressContent(address_t *content);
 
 #endif //MMN14_INSTRUCTIONS_H
