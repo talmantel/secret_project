@@ -12,12 +12,13 @@
 void writeMainOutput(FILE *outputFile, list_t *instructionsList, list_t *dataList);
 void writeEntriesOutput(FILE *outputFile, list_t *entriesList);
 void writeExternalsOutput(FILE *outputFile, list_t *externalsList);
+unsigned long getWordAsLong(word_t *word);
 
-void outputFiles(const char *baseFileName, list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList, list_t *externalsList){
-
+void outputFiles(const char *baseFileName, list_t *instructionsList, list_t *dataList, list_t *entriesList, list_t *externalsList){
     char *currentFileName;
     FILE *outputFile;
 
+    /* output object file */
     currentFileName = malloc((strlen(baseFileName) + strlen(MAIN_OUTPUT_FILE_SUFFIX) + 1) * sizeof(char));
     if(currentFileName == NULL)
         handleError(ERROR_OUT_OF_MEMORY);
@@ -35,7 +36,7 @@ void outputFiles(const char *baseFileName, list_t *symbolsList, list_t *instruct
         fclose(outputFile);
     }
 
-
+    /* output entries file */
     if(entriesList->length > 0) {
         currentFileName = realloc(currentFileName, (strlen(baseFileName) + strlen(ENTRIES_FILE_SUFFIX) + 1) * sizeof(char));
         if (currentFileName == NULL)
@@ -55,6 +56,7 @@ void outputFiles(const char *baseFileName, list_t *symbolsList, list_t *instruct
         }
     }
 
+    /* output externals file */
     if(externalsList->length > 0) {
         currentFileName = realloc(currentFileName, (strlen(baseFileName) + strlen(EXTERNALS_FILE_SUFFIX) + 1) * sizeof(char));
         if (currentFileName == NULL)
@@ -78,51 +80,26 @@ void outputFiles(const char *baseFileName, list_t *symbolsList, list_t *instruct
 }
 
 void writeMainOutput(FILE *outputFile, list_t *instructionsList, list_t *dataList) {
-    word_t *word;
     data_t *data;
     node_t *currentNode;
-    unsigned int wordAddress = START_ADDRESS;
-    unsigned int bitFieldValue;
+    unsigned long wordAddress = START_ADDRESS;
 
+    /* write file header */
     fprintf(outputFile, "%d %d\n", instructionsList->length, dataList->length);
 
+    /* write instructions */
     currentNode = instructionsList->head;
     while(currentNode != NULL){
-        word = currentNode->content;
-        bitFieldValue = 0;
-        switch (word->type) {
-            case WORD_TYPE_INSTRUCTION:
-                bitFieldValue += word->content.instruction->opcode;
-                bitFieldValue <<= 2U;
-                bitFieldValue += word->content.instruction->origin_addressing;
-                bitFieldValue <<= 3U;
-                bitFieldValue += word->content.instruction->origin_reg;
-                bitFieldValue <<= 2U;
-                bitFieldValue += word->content.instruction->dest_addressing;
-                bitFieldValue <<= 3U;
-                bitFieldValue += word->content.instruction->dest_reg;
-                bitFieldValue <<= 5U;
-                bitFieldValue += word->content.instruction->funct;
-                bitFieldValue <<= 3U;
-                bitFieldValue += word->content.instruction->are_type;
-                break;
-            case WORD_TYPE_ADDRESS:
-                bitFieldValue += word->content.address->address;
-                bitFieldValue <<= 3U;
-                bitFieldValue += word->content.address->are_type;
-                break;
-        }
-
-        fprintf(outputFile, "%07d %06x\n", wordAddress, bitFieldValue & 0xffffff);
+        fprintf(outputFile, "%07lu %06lx\n", wordAddress, getWordAsLong(currentNode->content) & 0xffffff);
         currentNode = currentNode->next;
         wordAddress++;
     }
 
-
+    /* write data */
     currentNode = dataList->head;
     while(currentNode != NULL){
         data = currentNode->content;
-        fprintf(outputFile, "%07d %06x\n", wordAddress, data->value & 0xffffff);
+        fprintf(outputFile, "%07lu %06lx\n", wordAddress, data->value);
         currentNode = currentNode->next;
         wordAddress++;
     }
@@ -135,7 +112,7 @@ void writeEntriesOutput(FILE *outputFile, list_t *entriesList) {
     currentNode = entriesList->head;
     while(currentNode != NULL){
         entry = currentNode->content;
-        fprintf(outputFile, "%s %07u\n", entry->name, (unsigned int)entry->address);
+        fprintf(outputFile, "%s %07ul\n", entry->name, entry->address);
         currentNode = currentNode->next;
     }
 }
@@ -146,7 +123,40 @@ void writeExternalsOutput(FILE *outputFile, list_t *externalsList) {
     currentNode = externalsList->head;
     while(currentNode != NULL){
         external = currentNode->content;
-        fprintf(outputFile, "%s %07u\n", external->name, (unsigned int)external->address);
+        fprintf(outputFile, "%s %07ul\n", external->name, external->address);
         currentNode = currentNode->next;
     }
+}
+
+
+/* Calculate the long value of a word */
+unsigned long getWordAsLong(word_t *word) {
+    unsigned long bitFieldValue = 0;
+    switch (word->type) {
+        case WORD_TYPE_INSTRUCTION:
+            bitFieldValue += word->content.instruction->opcode;
+            bitFieldValue <<= 2U;
+            bitFieldValue += word->content.instruction->origin_addressing;
+            bitFieldValue <<= 3U;
+            bitFieldValue += word->content.instruction->origin_reg;
+            bitFieldValue <<= 2U;
+            bitFieldValue += word->content.instruction->dest_addressing;
+            bitFieldValue <<= 3U;
+            bitFieldValue += word->content.instruction->dest_reg;
+            bitFieldValue <<= 5U;
+            bitFieldValue += word->content.instruction->funct;
+            bitFieldValue <<= 3U;
+            bitFieldValue += word->content.instruction->are_type;
+            break;
+        case WORD_TYPE_ADDRESS:
+            bitFieldValue += word->content.address->address;
+            bitFieldValue <<= 3U;
+            bitFieldValue += word->content.address->are_type;
+            break;
+        case WORD_TYPE_LABEL:
+            /* Labels should not be part of the output */
+            break;
+    }
+
+    return bitFieldValue;
 }

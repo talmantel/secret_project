@@ -47,7 +47,6 @@ RESULT firstPass(FILE *file, list_t *symbolsList, list_t *instructionsList, list
         lineNum++;
     }
 
-
     //injectErrors(symbolsList, instructionsList, dataList, entriesList);
     //injectReal(symbolsList, instructionsList, dataList, entriesList);
 

@@ -7,8 +7,8 @@
 
 typedef struct{
     char *name;
-    unsigned int address:21;
-    int lineNumber;
+    unsigned long address:21;
+    long lineNumber;
 } entry_t;
 
 void freeEntryContent(entry_t *content);

@@ -3,7 +3,7 @@
 
 typedef struct{
     char *name;
-    unsigned int address:21;
+    unsigned long address:21;
 } external_t;
 
 void freeExternalContent(external_t *content);

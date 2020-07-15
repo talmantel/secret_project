@@ -83,7 +83,7 @@ void processFile(const char *baseFileName, list_t *symbolsList, list_t *instruct
 
     if(secondPassResult == SUCCESS && firstPassResult == SUCCESS) {
         printf("Generating output files for input file: '%s'\n", fullInputFileName);
-        outputFiles(baseFileName, symbolsList, instructionsList, dataList, entriesList, externalsList);
+        outputFiles(baseFileName, instructionsList, dataList, entriesList, externalsList);
     }
 
     printf("Done processing input file: '%s'\n", fullInputFileName);

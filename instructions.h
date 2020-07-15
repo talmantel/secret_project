@@ -1,7 +1,3 @@
-//
-// Created by tal on 6/26/2020.
-//
-
 #ifndef MMN14_INSTRUCTIONS_H
 #define MMN14_INSTRUCTIONS_H
 
@@ -21,12 +17,12 @@ typedef struct{
 
 typedef struct{
     unsigned int are_type: 3;
-    unsigned int address: 21;
+    unsigned long address: 21;
 } address_t;
 
 typedef struct {
     char *label;
-    int lineNumber;
+    long lineNumber;
     ADDRESSING_TYPE addressing_type;
 } label_t;
 

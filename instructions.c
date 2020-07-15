@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "instructions.h"
 
+/* free all the memory allocated to a word_t */
 void freeWordContent(word_t *content){
     switch (content->type) {
         case WORD_TYPE_INSTRUCTION:
@@ -16,13 +17,18 @@ void freeWordContent(word_t *content){
     free(content);
 }
 
+/* free all the memory allocated to a instruction_t */
 void freeInstructionContent(instruction_t *instruction){
     free(instruction);
 }
+
+/* free all the memory allocated to a label_t */
 void freeLabelContent(label_t *label){
     free(label->label);
     free(label);
 }
+
+/* free all the memory allocated to a address_t */
 void freeAddressContent(address_t *address){
     free(address);
 }
