@@ -1,19 +1,35 @@
 #include <stdlib.h>
 #include "instructions.h"
 
-void freeWordContent(void * con){
+/* free all the memory allocated to a word_t */
+void freeWordContent(word_t *con){
     word_t * content = (word_t *)con;
     switch (content->type) {
         case WORD_TYPE_INSTRUCTION:
-            free(content->content.instruction);
+            freeInstructionContent(content->content.instruction);
             break;
         case WORD_TYPE_ADDRESS:
-            free(content->content.address);
+            freeAddressContent(content->content.address);
             break;
         case WORD_TYPE_LABEL:
-            free(content->content.label->label);
-            free(content->content.label);
+            freeLabelContent(content->content.label);
             break;
     }
     free(content);
+}
+
+/* free all the memory allocated to a instruction_t */
+void freeInstructionContent(instruction_t *instruction){
+    free(instruction);
+}
+
+/* free all the memory allocated to a label_t */
+void freeLabelContent(label_t *label){
+    free(label->label);
+    free(label);
+}
+
+/* free all the memory allocated to a address_t */
+void freeAddressContent(address_t *address){
+    free(address);
 }

@@ -6,8 +6,7 @@
 #define MMN14_DATA_H
 
 typedef struct{
-    int value:24;
-    int address;
+    unsigned long value:24;
 } data_t;
 
 void freeDataContent(void *content);

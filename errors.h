@@ -5,8 +5,8 @@
 #ifndef MMN14_ERRORS_H
 #define MMN14_ERRORS_H
 
-typedef enum {ERROR_OUT_OF_MEMORY} ERROR_T;
+typedef enum {ERROR_OUT_OF_MEMORY} ERROR_TYPE;
 
-void handleError(ERROR_T error);
+void handleError(ERROR_TYPE error);
 
 #endif //MMN14_ERRORS_H

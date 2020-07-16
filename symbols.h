@@ -10,7 +10,7 @@ typedef enum {CODE, DATA, ENTRY, EXTERNAL} SYMBOL_TYPE;
 
 typedef struct{
     char *name;
-    unsigned int address:21;
+    unsigned long address:21;
     SYMBOL_TYPE type;
 } symbol_t;
 

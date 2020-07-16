@@ -3,6 +3,7 @@
 
 typedef enum {SUCCESS, ERROR} RESULT;
 #define MAX_LINE_LENGTH 80
+#define START_ADDRESS 100
 #define INPUT_FILE_SUFFIX ".as"
 #define ENTRIES_FILE_SUFFIX ".ent"
 #define EXTERNALS_FILE_SUFFIX ".ext"
