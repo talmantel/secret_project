@@ -6,7 +6,7 @@
 #define MMN14_SYMBOLS_H
 #include "definitions.h"
 
-typedef enum {CODE, DATA, EXTERNAL} SYMBOL_TYPE;
+typedef enum {CODE, DATA, ENTRY, EXTERNAL} SYMBOL_TYPE;
 
 typedef struct{
     char *name;
@@ -15,9 +15,9 @@ typedef struct{
 } symbol_t;
 
 
-int compareSymbol(char *find, symbol_t *content);
+int compareSymbol(void * find, void * content);
 
-void freeSymbolContent(symbol_t *content);
+void freeSymbolContent(void *content);
 
 
 #endif //MMN14_SYMBOLS_H

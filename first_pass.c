@@ -25,8 +25,9 @@ RESULT firstPass(FILE *file, list_t *symbolsList, list_t *instructionsList, list
                 break;
         }
 
-        if(parseLine(line, symbolsList, instructionsList, dataList, entriesList) == ERROR)
+        if(parseLine(line, symbolsList, instructionsList, dataList, entriesList) == ERROR){
             result = ERROR;
+        }
 
         lineNum++;
     }

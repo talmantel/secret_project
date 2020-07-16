@@ -1,7 +1,8 @@
 #include <stdlib.h>
 #include "instructions.h"
 
-void freeWordContent(word_t *content){
+void freeWordContent(void * con){
+    word_t * content = (word_t *)con;
     switch (content->type) {
         case WORD_TYPE_INSTRUCTION:
             free(content->content.instruction);

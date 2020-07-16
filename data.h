@@ -7,8 +7,9 @@
 
 typedef struct{
     int value:24;
+    int address;
 } data_t;
 
-void freeDataContent(data_t *content);
+void freeDataContent(void *content);
 
 #endif //MMN14_DATA_H

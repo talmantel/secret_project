@@ -10,6 +10,7 @@ typedef struct{
     unsigned int address:21;
 } entry_t;
 
-void freeEntryContent(entry_t *content);
+void freeEntryContent(void *content);
+int compareEntry(void *find, void *content);
 
 #endif //MMN14_ENTRIES_H

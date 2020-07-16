@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "errors.h"
 
-void handleError(ERROR error){
+void handleError(ERROR_T error){
     switch (error) {
         case ERROR_OUT_OF_MEMORY:
             fprintf(stderr, "FATAL ERROR: Out of memory\n");

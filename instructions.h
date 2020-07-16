@@ -38,6 +38,6 @@ typedef struct{
     } content;
 } word_t;
 
-void freeWordContent(word_t *content);
+void freeWordContent(void *con);
 
 #endif //MMN14_INSTRUCTIONS_H

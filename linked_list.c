@@ -32,7 +32,7 @@ void addNode(list_t * list, void *content){
     list->length++;
 }
 
-void * search(list_t * list, int (*equals)(void *find, void *content), void *toFind){
+void * search(list_t * list, int (*equals)(void * find, void * content), void *toFind){
     node_t * current = list->head;
     while (current != NULL){
         if (equals(toFind, current->content)){

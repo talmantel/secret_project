@@ -2,6 +2,6 @@
 #include "data.h"
 
 
-void freeDataContent(data_t *content){
-    free(content);
+void freeDataContent(void *content){
+    free((data_t * )content);
 }
