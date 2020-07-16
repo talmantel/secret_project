@@ -2,7 +2,7 @@
 #include "instructions.h"
 
 /* free all the memory allocated to a word_t */
-void freeWordContent(word_t *con){
+void freeWordContent(void *con){
     word_t * content = (word_t *)con;
     switch (content->type) {
         case WORD_TYPE_INSTRUCTION:

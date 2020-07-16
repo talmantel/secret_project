@@ -7,7 +7,7 @@ int addSymbolToList(list_t * symbolList, SYMBOL_TYPE type, char * name, int addr
 int addDataToList(list_t * dataList, int value, int address);
 int DC = 0;
 
-RESULT parseLine(char *line, list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList){
+RESULT parseLine(char *line, int lineNum, list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList){
     char c;
     char * token;
     int i;
@@ -113,7 +113,6 @@ int addSymbolToList(list_t *symbolsList, SYMBOL_TYPE type, char * name, int addr
 int addDataToList(list_t * dataList, int value, int address){
     data_t * data = malloc(sizeof(data_t));
     data->value = value;
-    data->address = address;
     addNode(dataList, data);
     return 1;
 }
