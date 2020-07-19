@@ -71,8 +71,7 @@ void processFile(const char *baseFileName, list_t *symbolsList, list_t *instruct
 
     if(inputFile == NULL) {
         fprintf(stderr, "Input file '%s' does not exist or cannot be opened!\n", fullInputFileName);
-        free(fullInputFileName);
-        return;
+        goto end;
     }
 
     printf("Running first pass on input file: '%s'\n", fullInputFileName);
@@ -88,5 +87,7 @@ void processFile(const char *baseFileName, list_t *symbolsList, list_t *instruct
 
     printf("Done processing input file: '%s'\n", fullInputFileName);
     fclose(inputFile);
+
+    end:
     free(fullInputFileName);
 }

@@ -1,9 +1,16 @@
 #ifndef MMN14_DEFINITIONS_H
 #define MMN14_DEFINITIONS_H
 
-typedef enum {SUCCESS, ERROR} RESULT;
+typedef enum {
+    ERROR = -1,  /* error*/
+    SUCCESS = 0, /*success*/
+    APPEND_FOR_ORIG = 1, /*need to add word for representing the origin operand*/
+    APPEND_FOR_DEST = 2, /*need to add word for representing the destination operand*/
+    APPEND_FOR_BOTH = 3 /*need to add two words for representing both the origin and the destination operands*/
+} RESULT;
 #define MAX_LINE_LENGTH 80
 #define START_ADDRESS 100
+#define MAX_COMMAND_LENGTH 5
 #define INPUT_FILE_SUFFIX ".as"
 #define ENTRIES_FILE_SUFFIX ".ent"
 #define EXTERNALS_FILE_SUFFIX ".ext"

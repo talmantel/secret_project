@@ -1,24 +1,20 @@
 #include "parser.h"
+#include "actions.h"
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
 
 int addSymbolToList(list_t * symbolList, SYMBOL_TYPE type, char * name, int address);
 int addDataToList(list_t * dataList, int value, int address);
-int DC = 0;
 
 RESULT parseLine(char *line, int lineNum, list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList){
-    char c;
+    static int DC = 0;
+    static int IC = 0;
     char * token;
     int i;
     int wordCount = 1;
-    int errorFlag = 0;
     int hasLabel = 0;
     char * label;
-
-
-    if (*line == ';') /*line start with ; -> its a comment - ignoring the line.*/
-        return SUCCESS;
 
     /*removing leading whitespaces chars if exist*/
     for (i = 0; i < strlen(line); i++){
@@ -28,6 +24,8 @@ RESULT parseLine(char *line, int lineNum, list_t *symbolsList, list_t *instructi
         if (!isspace(*(line+i)))
             break;
     }
+    if (*line == ';') /*line start with ; -> its a comment - ignoring the line.*/
+        return SUCCESS;
 
     while (token = strtok_r(line, " ", &line)) {
         if (wordCount == 1) {
@@ -37,7 +35,7 @@ RESULT parseLine(char *line, int lineNum, list_t *symbolsList, list_t *instructi
                 hasLabel = 1;
             }
         }
-        if (*token == "."){ /*start with '.' -> means its .....*/
+        if (*token == '.'){ /*start with '.' -> means its .....*/
             if (strcmp(token, ".external") == 0){
                 token = strtok_r(line, " ", &line);
                 addSymbolToList(symbolsList, EXTERNAL, token, 0);
@@ -62,40 +60,127 @@ RESULT parseLine(char *line, int lineNum, list_t *symbolsList, list_t *instructi
                     addSymbolToList(symbolsList, DATA, label, 0);
                 }
                 while((token = strtok_r(line, ",", &line))){ /*splitting by ,*/
-                     addDataToList(dataList, atoi(token), DC);
-                     DC++;
+                    int i;
+                    if(*(line+1) == ','){ /* there are 2 commas in a row.*/
+                        return ERROR;
+                    }
+                    for(i = 0; i < strlen(token); i++){ /*checking if contains only numbers with leading minus or plus sign*/
+                        if(!isdigit(token[i])){ /* none number parameter in .data*/
+                            if ((token[i] == '-' || token[i] == '+') && i != 0) { /* has minus or plus but not in the lead*/
+                                return ERROR;
+                            }
+                        }
+                    }
+                    addDataToList(dataList, atoi(token), DC);
+                    DC++;
                 }
             } else if (strcmp(token, ".string") == 0){
+                int i;
                 if (hasLabel){
                     addSymbolToList(symbolsList, DATA, label, 0);
                 }
-                int i;
-                token = strtok_r(line, " ", &line);
+                token = strtok_r(line, " ", &line); /*get the rest of the line after .string*/
                 for(i = 0; token[i]; i++){
+                    if (!isprint(token[i])){ /*check if this a printable char*/
+                        return ERROR;
+                    }
                     addDataToList(dataList, token[i], DC);
                     DC++;
                 }
-            } else { /*error*/
+            } else { /*error - start with '.' but not one of the possibilities*/
                 return ERROR;
             }
             hasLabel = 0;
             break; /* already done reading the line inside the checks.*/
         } /* end checking if start with . (dot)*/
         else {
-            if (token){
+            char * command;
+            char * origOper;
+            char * destOper;
+            RESULT result;
+            int j;
+            instruction_t * instruction = malloc(sizeof(instruction_t));
+            strcpy(command, token);
 
+            /*checking if there is more in the rest of the line.*/
+            if (strlen(line) < 1){ /* no more  - no operands.*/
+                origOper = NULL;
+                destOper = NULL;
+            } else { /* at least one operand*/
+                token = strtok_r(line, ",", &line);
+
+                /*checking if there is more in the rest of the line.*/
+                if (strlen(line) < 1) { /* no more  - only one operand*/
+                    origOper = NULL;
+                    destOper = strtok_r(token, " ", &token); /*cleaning tailing spaces and checking if there was space in the middle*/
+                    if (strlen(token) > 0) {  /*there was a space in the middle*/
+                        return ERROR;
+                    }
+                } else { /* two operands */
+                    origOper = strtok_r(token, " ", &token); /*cleaning tailing spaces and checking if there was space in the middle*/
+                    if (strlen(token) > 0) {  /*there was a space in the middle*/
+                        return ERROR;
+                    }
+                    for (j = 0; j < strlen(line); j++){ /*removing leading white spaces from destOper*/
+                        if (!isspace(*(line+j)))
+                            break;
+                    }
+                    destOper = strtok_r(line + j, " ", &line); /*cleaning tailing spaces and checking if there was space in the middle*/
+                    if (strlen(line) > 0) {  /*there was a space in the middle*/
+                        return ERROR;
+                    }
+                }
+            }
+            result = setCommandParameters(command, origOper, destOper, instruction);
+            if (result == ERROR){
+                return ERROR;
+            } else {
+                word_t * word = malloc(sizeof(word_t));
+                word->type = WORD_TYPE_INSTRUCTION;
+                word->content.instruction = instruction;
+                addNode(instructionsList, word);
+                IC++;
+                if (result == SUCCESS){ /*no need to append any extra word*/
+                    return SUCCESS;
+                }
+                if (result & APPEND_FOR_ORIG){
+                    word = malloc(sizeof(word_t));
+                    if (instruction->origin_addressing == ADDRESSING_TYPE_IMMEDIATE){
+                        word->type = WORD_TYPE_ADDRESS;
+                        word->content.address->address = atoi((origOper+1));
+                        word->content.address->are_type = A;
+                    } else {
+                        word->content.label = malloc(sizeof(label_t));
+                        strcpy(word->content.label->label, (origOper));
+                        /*TODO:number of the distance should be inserted in the second pass*/
+                        if (instruction->origin_addressing == ADDRESSING_TYPE_RELATIVE) {
+                            word->content.address->are_type = A;
+                        }
+                    }
+                    addNode(instructionsList, word);
+                    IC++;
+                }
+                if (result & APPEND_FOR_DEST){
+                    word = malloc(sizeof(word_t));
+                    if (instruction->dest_addressing == ADDRESSING_TYPE_IMMEDIATE){
+                        word->type = WORD_TYPE_ADDRESS;
+                        word->content.address->address = atoi((destOper+1));
+                        word->content.address->are_type = A;
+                    } else {
+                        word->content.label = malloc(sizeof(label_t));
+                        strcpy(word->content.label->label, (destOper));
+                        /*TODO:number of the distance should be inserted in the second pass*/
+                        if (instruction->dest_addressing == ADDRESSING_TYPE_RELATIVE) {
+                            word->content.address->are_type = A;
+                        }
+                    }
+                    addNode(instructionsList, word);
+                    IC++;
+                }
             }
         }
     }
-    for (; i < strlen(line); i++){
-        if (*(line+i) == '\n') { /*reached enf of line*/
-            if (errorFlag)
-                return ERROR;
-            return SUCCESS;
-        }
-
-
-    }
+    return SUCCESS;
 }
 
 int addSymbolToList(list_t *symbolsList, SYMBOL_TYPE type, char * name, int address){
