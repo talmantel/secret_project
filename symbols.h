@@ -6,7 +6,7 @@
 #define MMN14_SYMBOLS_H
 #include "definitions.h"
 
-typedef enum {CODE, DATA, ENTRY, EXTERNAL} SYMBOL_TYPE;
+typedef enum {CODE, DATA, EXTERNAL} SYMBOL_TYPE;
 
 typedef struct{
     char *name;

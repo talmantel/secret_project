@@ -4,10 +4,12 @@
 #include "instructions.h"
 #include "definitions.h"
 
-typedef struct action{
-    unsigned int funct : 5;
-    unsigned int opcode : 5;
-} action_t;
+typedef struct allowedAdd {
+    char immediate:1;
+    char direct:1;
+    char relative:1;
+    char reg:1;
+} allowedAdd_t;
 
 RESULT setCommandParameters(char * command, char * origOper, char * destOper, instruction_t * instruction);
 

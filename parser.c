@@ -48,7 +48,6 @@ RESULT parseLine(char *line, int lineNum, list_t *symbolsList, list_t *instructi
                 if (search(entriesList, compareEntry, token)){
                     entry_t *entry = malloc(sizeof(entry_t));
                     strcpy(entry->name, token);
-                    entry->address = 0; /*not sure...*/
                     addNode(entriesList, entry);
                 }
                 token = strtok_r(line, " ", &line);
@@ -147,15 +146,13 @@ RESULT parseLine(char *line, int lineNum, list_t *symbolsList, list_t *instructi
                     word = malloc(sizeof(word_t));
                     if (instruction->origin_addressing == ADDRESSING_TYPE_IMMEDIATE){
                         word->type = WORD_TYPE_ADDRESS;
+                        word->content.address = malloc(sizeof(address_t));
                         word->content.address->address = atoi((origOper+1));
                         word->content.address->are_type = A;
                     } else {
                         word->content.label = malloc(sizeof(label_t));
                         strcpy(word->content.label->label, (origOper));
-                        /*TODO:number of the distance should be inserted in the second pass*/
-                        if (instruction->origin_addressing == ADDRESSING_TYPE_RELATIVE) {
-                            word->content.address->are_type = A;
-                        }
+                        word->content.label->addressing_type = instruction->origin_addressing;
                     }
                     addNode(instructionsList, word);
                     IC++;
@@ -169,10 +166,7 @@ RESULT parseLine(char *line, int lineNum, list_t *symbolsList, list_t *instructi
                     } else {
                         word->content.label = malloc(sizeof(label_t));
                         strcpy(word->content.label->label, (destOper));
-                        /*TODO:number of the distance should be inserted in the second pass*/
-                        if (instruction->dest_addressing == ADDRESSING_TYPE_RELATIVE) {
-                            word->content.address->are_type = A;
-                        }
+                        word->content.label->addressing_type = instruction->origin_addressing;
                     }
                     addNode(instructionsList, word);
                     IC++;

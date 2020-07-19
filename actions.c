@@ -3,13 +3,6 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-typedef struct allowedAdd {
-    char immediate:1;
-    char direct:1;
-    char relative:1;
-    char reg:1;
-}allowedAdd_t;
-
 RESULT checkOperands(instruction_t * instruction, const char * origOper, const char * destOper);
 RESULT setAddressing(instruction_t * instruction, const char * origOper, const char * destOper);
 RESULT checkOriginOperand(instruction_t * instruction, const char * operand, allowedAdd_t allowedAddressing);
