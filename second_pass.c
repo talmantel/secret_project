@@ -67,12 +67,12 @@ RESULT addAddressToEntry(list_t *symbolsList, entry_t *entry) {
     symbol_t *symbol = search(symbolsList, (int (*)(void *, void *)) compareSymbol, entry->name);
 
     if(symbol == NULL){
-        fprintf(stderr, "Error in line %d: '%s' is not defined\n", entry->lineNumber, entry->name);
+        fprintf(stderr, "Error in line %ld: '%s' is not defined\n", entry->lineNumber, entry->name);
         return ERROR;
     }
 
     if(symbol->type == EXTERNAL){
-        fprintf(stderr, "Error in line %d: External label '%s' cannot be used as operand in 'entry' command\n", entry->lineNumber, entry->name);
+        fprintf(stderr, "Error in line %ld: External label '%s' cannot be used as operand in 'entry' command\n", entry->lineNumber, entry->name);
         return ERROR;
     }
 
@@ -89,7 +89,7 @@ RESULT handleLabel(list_t *symbolsList, list_t *externalsList, word_t *word, uns
     symbol_t *symbol = search(symbolsList, (int (*)(void *, void *)) compareSymbol, word->content.label->label);
 
     if(symbol == NULL){
-        fprintf(stderr, "Error in line %d: '%s' is not defined\n", word->content.label->lineNumber, word->content.label->label);
+        fprintf(stderr, "Error in line %ld: '%s' is not defined\n", word->content.label->lineNumber, word->content.label->label);
         return ERROR;
     }
 
@@ -122,7 +122,7 @@ RESULT handleLabel(list_t *symbolsList, list_t *externalsList, word_t *word, uns
             break;
         case ADDRESSING_TYPE_RELATIVE:
             if(symbol->type == EXTERNAL){
-                fprintf(stderr, "Error in line %d: External label '%s' cannot be used as relative operand\n",  word->content.label->lineNumber, word->content.label->label);
+                fprintf(stderr, "Error in line %ld: External label '%s' cannot be used as relative operand\n",  word->content.label->lineNumber, word->content.label->label);
                 free(address);
                 return ERROR;
             }
