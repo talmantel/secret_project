@@ -14,6 +14,8 @@ int finishReadingLine(FILE *file);
 void injectReal(list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList);
 void injectErrors(list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList);
 
+void correctSymbolsAddresses(list_t *symbolsList, int IC);
+
 RESULT firstPass(FILE *file, list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList){
     char line[MAX_LINE_LENGTH+3];
     int lineNum = 1;
@@ -48,11 +50,34 @@ RESULT firstPass(FILE *file, list_t *symbolsList, list_t *instructionsList, list
         lineNum++;
     }
 
+    correctSymbolsAddresses(symbolsList, instructionsList->length);
+
     //injectErrors(symbolsList, instructionsList, dataList, entriesList);
     //injectReal(symbolsList, instructionsList, dataList, entriesList);
 
     return result;
 }
+
+void correctSymbolsAddresses(list_t *symbolsList, int IC){
+    node_t *currentNode;
+    symbol_t *symbol;
+    currentNode = symbolsList->head;
+    while(currentNode != NULL){
+        symbol = currentNode->content;
+        switch (symbol->type) {
+            case CODE:
+                symbol->address += START_ADDRESS;
+                break;
+            case DATA:
+                symbol->address += START_ADDRESS + IC;
+                break;
+            case EXTERNAL:
+                break;
+        }
+        currentNode = currentNode->next;
+    }
+}
+
 
 void injectErrors(list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList){
     symbol_t *symbol;
@@ -531,12 +556,6 @@ void injectReal(list_t *symbolsList, list_t *instructionsList, list_t *dataList,
     addNode(entriesList, entry);
 
 }
-
-
-/*RESULT parseLine(char *line, int lineNum, list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList){
-    printf("Parsing line %d: '%s'\n", lineNum, line);
-    return SUCCESS;
-}*/
 
 /* read until end of line or EOF, returns last character read */
 int finishReadingLine(FILE *file){

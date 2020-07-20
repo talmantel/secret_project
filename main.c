@@ -54,7 +54,6 @@ int main(int argc, char** argv) {
  * param baseFileName - base name of file to run the assembler on
  */
 void processFile(const char *baseFileName, list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList, list_t *externalsList) {
-    RESULT firstPassResult, secondPassResult;
     char *fullInputFileName;
     FILE *inputFile;
 
@@ -69,25 +68,23 @@ void processFile(const char *baseFileName, list_t *symbolsList, list_t *instruct
 
     inputFile = fopen(fullInputFileName, "r");
 
-    if(inputFile == NULL) {
+    if(inputFile != NULL) {
+        printf("Running first pass on input file: '%s'\n", fullInputFileName);
+        if(firstPass(inputFile, symbolsList, instructionsList, dataList, entriesList) == SUCCESS){
+            printf("Running second pass on input file: '%s'\n", fullInputFileName);
+            if(secondPass(symbolsList, instructionsList, entriesList, externalsList) == SUCCESS){
+                printf("Generating output files for input file: '%s'\n", fullInputFileName);
+                outputFiles(baseFileName, instructionsList, dataList, entriesList, externalsList);
+            }
+
+        }
+
+        printf("Done processing input file: '%s'\n", fullInputFileName);
+        fclose(inputFile);
+    }
+    else{
         fprintf(stderr, "Input file '%s' does not exist or cannot be opened!\n", fullInputFileName);
-        goto end;
     }
 
-    printf("Running first pass on input file: '%s'\n", fullInputFileName);
-    firstPassResult = firstPass(inputFile, symbolsList, instructionsList, dataList, entriesList);
-
-    printf("Running second pass on input file: '%s'\n", fullInputFileName);
-    secondPassResult = secondPass(symbolsList, instructionsList, entriesList, externalsList);
-
-    if(secondPassResult == SUCCESS && firstPassResult == SUCCESS) {
-        printf("Generating output files for input file: '%s'\n", fullInputFileName);
-        outputFiles(baseFileName, instructionsList, dataList, entriesList, externalsList);
-    }
-
-    printf("Done processing input file: '%s'\n", fullInputFileName);
-    fclose(inputFile);
-
-    end:
     free(fullInputFileName);
 }

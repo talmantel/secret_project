@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-int addSymbolToList(list_t * symbolList, SYMBOL_TYPE type, char * name, int address);
+int addSymbolToList(list_t * symbolsList, SYMBOL_TYPE type, char * name, int address);
 int addDataToList(list_t * dataList, int value, int address);
 
 RESULT parseLine(char *line, int lineNum, list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList){
