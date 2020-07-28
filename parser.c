@@ -1,18 +1,27 @@
 #include "parser.h"
 #include "actions.h"
+#include "symbols.h"
+#include "instructions.h"
+#include "data.h"
+#include "entries.h"
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
 
 int addSymbolToList(list_t * symbolList, SYMBOL_TYPE type, char * name, int address);
 int addDataToList(list_t * dataList, int value, int address);
+int checkIfReservedWord(char * word);
+int addEntryToList(list_t * entriesList, char * name);
+
+char * reservedWords[] = {"mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec",
+                          "jmp", "bne", "jsr", "red", "prn", "rt", "stop", ".string", ".entry",
+                          ".data", ".external", "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "\0"};
+                                                               /* null terminator to end the loop ^ */
 
 RESULT parseLine(char *line, int lineNum, list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList){
-    static int DC = 0;
-    static int IC = 0;
     char * token;
     int i;
-    int wordCount = 1;
+    int firstWord = 1; /* flag to know if its the first word for label check*/
     int hasLabel = 0;
     char * label;
 
@@ -28,35 +37,45 @@ RESULT parseLine(char *line, int lineNum, list_t *symbolsList, list_t *instructi
         return SUCCESS;
 
     while (token = strtok_r(line, " ", &line)) {
-        if (wordCount == 1) {
+        if (firstWord) {
             if (*(token + strlen(token) - 1) == ':') { /*its a label..*/
                 label = calloc(strlen(token - 1), sizeof(char));
                 strncpy(label, token, strlen(token - 1));
+                if (!checkIfReservedWord(label)){ /* the label is reserved word*/
+                    return ERROR;
+                }
                 hasLabel = 1;
             }
         }
+        firstWord = 0;
         if (*token == '.'){ /*start with '.' -> means its .....*/
             if (strcmp(token, ".external") == 0){
                 token = strtok_r(line, " ", &line);
-                addSymbolToList(symbolsList, EXTERNAL, token, 0);
+                if (!checkIfReservedWord(token)){ /*trying to use a reserved word*/
+                    return ERROR;
+                }
+                if (addSymbolToList(symbolsList, EXTERNAL, token, 0) == 0){
+                    return ERROR; /*duplication in symbol with different type*/
+                }
                 token = strtok_r(line, " ", &line);
-                if (token != NULL){ /*extra after label -> error*/
+                if (token != NULL){ /*extra after label or space inside the label -> error*/
                     return ERROR;
                 }
             } else if (strcmp(token, ".entry") == 0){
                 token = strtok_r(line, " ", &line);
-                if (search(entriesList, compareEntry, token)){
-                    entry_t *entry = malloc(sizeof(entry_t));
-                    strcpy(entry->name, token);
-                    addNode(entriesList, entry);
+                if (!checkIfReservedWord(token)){ /*trying to use a reserved word*/
+                    return ERROR;
                 }
+                addEntryToList(entriesList, token); /*returning value is ignored - duplicates will be check in second pass*/
                 token = strtok_r(line, " ", &line);
                 if (token != NULL){ /*extra after label -> error*/
                     return ERROR;
                 }
             } else if (strcmp(token, ".data") == 0){
                 if (hasLabel){
-                    addSymbolToList(symbolsList, DATA, label, 0);
+                    if(addSymbolToList(symbolsList, DATA, label, dataList->length) == 0){
+                        return ERROR; /*duplication in symbol with different type*/
+                    }
                 }
                 while((token = strtok_r(line, ",", &line))){ /*splitting by ,*/
                     int i;
@@ -70,23 +89,30 @@ RESULT parseLine(char *line, int lineNum, list_t *symbolsList, list_t *instructi
                             }
                         }
                     }
-                    addDataToList(dataList, atoi(token), DC);
-                    DC++;
+                    addDataToList(dataList, atoi(token), dataList->length);
                 }
             } else if (strcmp(token, ".string") == 0){
                 int i;
                 if (hasLabel){
-                    addSymbolToList(symbolsList, DATA, label, 0);
+                    addSymbolToList(symbolsList, DATA, label, dataList->length);
                 }
-                token = strtok_r(line, " ", &line); /*get the rest of the line after .string*/
+                for (i =0; i < strlen(line); i++){ /*removing leading white spaces*/
+                    if (!isspace(*(line+i)))
+                        break;
+                }
+                if (*(line + i) != '"'){ /*string not starting with quotes*/
+                    return ERROR;
+                }
+                /*get the rest of the line after .string
+                 * starting from index i + 1 - i for the white spaces, 1 for the first quote */
+                token = strtok_r(line + i + 1, "\"", &line);
                 for(i = 0; token[i]; i++){
                     if (!isprint(token[i])){ /*check if this a printable char*/
                         return ERROR;
                     }
-                    addDataToList(dataList, token[i], DC);
-                    DC++;
+                    addDataToList(dataList, token[i], dataList->length);
                 }
-            } else { /*error - start with '.' but not one of the possibilities*/
+            } else { /*error - start with '.' but none of the possibilities*/
                 return ERROR;
             }
             hasLabel = 0;
@@ -116,6 +142,9 @@ RESULT parseLine(char *line, int lineNum, list_t *symbolsList, list_t *instructi
                         return ERROR;
                     }
                 } else { /* two operands */
+                    if(*line == ','){ /*two commas in a row*/
+                        return ERROR;
+                    }
                     origOper = strtok_r(token, " ", &token); /*cleaning tailing spaces and checking if there was space in the middle*/
                     if (strlen(token) > 0) {  /*there was a space in the middle*/
                         return ERROR;
@@ -138,7 +167,9 @@ RESULT parseLine(char *line, int lineNum, list_t *symbolsList, list_t *instructi
                 word->type = WORD_TYPE_INSTRUCTION;
                 word->content.instruction = instruction;
                 addNode(instructionsList, word);
-                IC++;
+                if (hasLabel){
+                    addSymbolToList(symbolsList, WORD_TYPE_INSTRUCTION, label, instructionsList->length-1);
+                }
                 if (result == SUCCESS){ /*no need to append any extra word*/
                     return SUCCESS;
                 }
@@ -155,7 +186,6 @@ RESULT parseLine(char *line, int lineNum, list_t *symbolsList, list_t *instructi
                         word->content.label->addressing_type = instruction->origin_addressing;
                     }
                     addNode(instructionsList, word);
-                    IC++;
                 }
                 if (result & APPEND_FOR_DEST){
                     word = malloc(sizeof(word_t));
@@ -169,7 +199,6 @@ RESULT parseLine(char *line, int lineNum, list_t *symbolsList, list_t *instructi
                         word->content.label->addressing_type = instruction->origin_addressing;
                     }
                     addNode(instructionsList, word);
-                    IC++;
                 }
             }
         }
@@ -178,12 +207,28 @@ RESULT parseLine(char *line, int lineNum, list_t *symbolsList, list_t *instructi
 }
 
 int addSymbolToList(list_t *symbolsList, SYMBOL_TYPE type, char * name, int address){
-    if (search(symbolsList, compareSymbol, name)){
+    symbol_t * exist = search(symbolsList, compareSymbol, name);
+    if (!exist){
         symbol_t *symbol = malloc(sizeof(symbol_t));
         symbol->type = type;
         strcpy(symbol->name, name);
         symbol->address = address;
         addNode(symbolsList, symbol);
+        return 1;
+    } else {
+        if (exist->type == type){
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int addEntryToList(list_t * entriesList, char * name){
+    entry_t * exist = search(entriesList, compareEntry, name);
+    if (!exist){
+        entry_t *entry = malloc(sizeof(entry_t));
+        strcpy(entry->name, name);
+        addNode(entriesList, entry);
         return 1;
     }
     return 0;
@@ -193,5 +238,17 @@ int addDataToList(list_t * dataList, int value, int address){
     data_t * data = malloc(sizeof(data_t));
     data->value = value;
     addNode(dataList, data);
+    return 1;
+}
+
+/*checking if the word is a reserved word.
+ * returns 0 if yes, 1 otherwise.*/
+int checkIfReservedWord(char * word){
+    int i;
+    for (i = 0; *reservedWords[i]; i++){
+        if (strcmp(word, reservedWords[i]) == 0){
+            return 0;
+        }
+    }
     return 1;
 }
