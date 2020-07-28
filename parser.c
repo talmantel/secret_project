@@ -8,7 +8,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-int addSymbolToList(list_t * symbolList, SYMBOL_TYPE type, char * name, int address);
+int addSymbolToList(list_t * symbolsList, SYMBOL_TYPE type, char * name, int address);
 int addDataToList(list_t * dataList, int value, int address);
 int checkIfReservedWord(char * word);
 int addEntryToList(list_t * entriesList, char * name);

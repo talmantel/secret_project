@@ -10,7 +10,7 @@
 #include "entries.h"
 #include "externals.h"
 
-RESULT handleLabel(list_t *symbolsList, list_t *externalsList, word_t *word, unsigned int instructionAddress, unsigned int wordAddress);
+RESULT replaceLabelWithAddress(list_t *symbolsList, list_t *externalsList, word_t *word, unsigned int instructionAddress, unsigned int wordAddress);
 
 RESULT addAddressToEntry(list_t *symbolsList, entry_t *entry);
 
@@ -32,7 +32,7 @@ RESULT secondPass(list_t *symbolsList, list_t *instructionsList, list_t *entries
         word = currentNode->content;
         switch (word->type) {
             case WORD_TYPE_LABEL:
-                if(handleLabel(symbolsList, externalsList, word, currentInstructionAddress, wordAddress) == ERROR)
+                if(replaceLabelWithAddress(symbolsList, externalsList, word, currentInstructionAddress, wordAddress) == ERROR)
                     result = ERROR;
                 break;
             case WORD_TYPE_INSTRUCTION:
@@ -81,7 +81,7 @@ RESULT addAddressToEntry(list_t *symbolsList, entry_t *entry) {
     return SUCCESS;
 }
 
-RESULT handleLabel(list_t *symbolsList, list_t *externalsList, word_t *word, unsigned int instructionAddress, unsigned int wordAddress) {
+RESULT replaceLabelWithAddress(list_t *symbolsList, list_t *externalsList, word_t *word, unsigned int instructionAddress, unsigned int wordAddress) {
     address_t *address;
     external_t *external;
 

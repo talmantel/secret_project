@@ -3,10 +3,11 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+typedef enum {ORIGIN, DESTINATION} OPERAND_SLOT;
+
 RESULT checkOperands(instruction_t * instruction, const char * origOper, const char * destOper);
 RESULT setAddressing(instruction_t * instruction, const char * origOper, const char * destOper);
-RESULT checkOriginOperand(instruction_t * instruction, const char * operand, allowedAdd_t allowedAddressing);
-RESULT checkDestOperand(instruction_t * instruction, const char * operand, allowedAdd_t allowedAddressing);
+RESULT checkOperand(instruction_t * instruction, const char * operand, allowedAdd_t allowedAddressing, OPERAND_SLOT operandSlot);
 
 /*checking the command inserted and setting the opcode and funct
  * if no matching command has been found returning ERROR.
@@ -72,7 +73,7 @@ RESULT setCommandParameters(char * command, char * origOper, char * destOper, in
  * if the operand type isn't matching the command - returning ERROR.
  * otherwise continue checking addressing types for the operands and setting instruction' properties */
 RESULT checkOperands(instruction_t * instruction, const char * origOper, const char * destOper){
-    switch (instruction->opcode){ /* check num of operands..*/
+    switch ((int)instruction->opcode){ /* check num of operands..*/
         case 0:
         case 1:
         case 2:
@@ -105,18 +106,18 @@ RESULT checkOperands(instruction_t * instruction, const char * origOper, const c
 RESULT setAddressing(instruction_t * instruction, const char * origOper, const char * destOper){
     RESULT result = 0, tempResult;
     allowedAdd_t origAllowedAdd, destAllowedAdd;
-    switch (instruction->opcode){ /* check and set the addressing type..*/
+    switch ((int)instruction->opcode){ /* check and set the addressing type..*/
         case 1: /* orig - 0,1,3 | dest - 0,1,3*/
             origAllowedAdd.immediate = destAllowedAdd.immediate = 1;
             origAllowedAdd.direct = destAllowedAdd.direct = 1;
             origAllowedAdd.relative = destAllowedAdd.relative = 0;
             origAllowedAdd.reg = destAllowedAdd.reg = 1;
-            if((tempResult = checkOriginOperand(instruction, origOper, origAllowedAdd)) != -1){
+            if((tempResult = checkOperand(instruction, origOper, origAllowedAdd, ORIGIN)) != -1){
                 result += tempResult;
             } else {
                 return ERROR;
             }
-            if((tempResult = checkDestOperand(instruction, destOper, origAllowedAdd)) != -1){
+            if((tempResult = checkOperand(instruction, destOper, destAllowedAdd, DESTINATION)) != -1){
                 result += tempResult;
             } else {
                 return ERROR;
@@ -129,12 +130,12 @@ RESULT setAddressing(instruction_t * instruction, const char * origOper, const c
             origAllowedAdd.direct = destAllowedAdd.direct = 1;
             origAllowedAdd.relative = destAllowedAdd.relative = 0;
             origAllowedAdd.reg = destAllowedAdd.reg = 1;
-            if((tempResult = checkOriginOperand(instruction, origOper, origAllowedAdd)) != -1){
+            if((tempResult = checkOperand(instruction, origOper, origAllowedAdd, ORIGIN)) != -1){
                 result += tempResult;
             } else {
                 return ERROR;
             }
-            if((tempResult = checkDestOperand(instruction, destOper, origAllowedAdd)) != -1){
+            if((tempResult = checkOperand(instruction, destOper, destAllowedAdd, DESTINATION)) != -1){
                 result += tempResult;
             } else {
                 return ERROR;
@@ -146,12 +147,12 @@ RESULT setAddressing(instruction_t * instruction, const char * origOper, const c
             origAllowedAdd.relative = destAllowedAdd.relative = 0;
             origAllowedAdd.reg = 0;
             destAllowedAdd.reg = 1;
-            if((tempResult = checkOriginOperand(instruction, origOper, origAllowedAdd)) != -1){
+            if((tempResult = checkOperand(instruction, origOper, origAllowedAdd, ORIGIN)) != -1){
                 result += tempResult;
             } else {
                 return ERROR;
             }
-            if((tempResult = checkDestOperand(instruction, destOper, origAllowedAdd)) != -1){
+            if((tempResult = checkOperand(instruction, destOper, destAllowedAdd, DESTINATION)) != -1){
                 result += tempResult;
             } else {
                 return ERROR;
@@ -162,7 +163,7 @@ RESULT setAddressing(instruction_t * instruction, const char * origOper, const c
             destAllowedAdd.direct = 1;
             destAllowedAdd.relative = 1;
             destAllowedAdd.reg = 0;
-            if((tempResult = checkDestOperand(instruction, destOper, origAllowedAdd)) != -1){
+            if((tempResult = checkOperand(instruction, destOper, destAllowedAdd, DESTINATION)) != -1){
                 result += tempResult;
             } else {
                 return ERROR;
@@ -174,7 +175,7 @@ RESULT setAddressing(instruction_t * instruction, const char * origOper, const c
             destAllowedAdd.direct = 1;
             destAllowedAdd.relative = 0;
             destAllowedAdd.reg = 1;
-            if((tempResult = checkDestOperand(instruction, destOper, origAllowedAdd)) != -1){
+            if((tempResult = checkOperand(instruction, destOper, destAllowedAdd, DESTINATION)) != -1){
                 result += tempResult;
             } else {
                 return ERROR;
@@ -185,7 +186,7 @@ RESULT setAddressing(instruction_t * instruction, const char * origOper, const c
             destAllowedAdd.direct = 1;
             destAllowedAdd.relative = 0;
             destAllowedAdd.reg = 1;
-            if((tempResult = checkDestOperand(instruction, destOper, origAllowedAdd)) != -1){
+            if((tempResult = checkOperand(instruction, destOper, destAllowedAdd, DESTINATION)) != -1){
                 result += tempResult;
             } else {
                 return ERROR;
@@ -200,108 +201,61 @@ RESULT setAddressing(instruction_t * instruction, const char * origOper, const c
     return result;
 }
 
-/* checking origin operand and comparing it to the addressing type allowed for this command.
+/* checking operand and comparing it to the addressing type allowed for this command.
  * if something is wrong with the operands (using unsupported addressing type/wrong input in the operand) returns ERROR.
- * otherwise returning RESULT as the next action to do (how many and what words should be append).*/
-RESULT checkOriginOperand(instruction_t * instruction, const char * operand, allowedAdd_t allowedAddressing){
-    if (*operand == '&'){ /*addressing type 2*/
+ * otherwise returning RESULT as the next action to do (how many and what words should be appended).*/
+RESULT checkOperand(instruction_t * instruction, const char * operand, allowedAdd_t allowedAddressing, OPERAND_SLOT operandSlot){
+    ADDRESSING_TYPE addressingType;
+    int i, reg = 0, shouldAppend = 0;
+
+    if (operand[0] == '&'){ /*addressing type 2*/
         if(allowedAddressing.relative){
-            instruction->origin_addressing = ADDRESSING_TYPE_RELATIVE;
-            instruction->origin_reg = 0;
+            addressingType = ADDRESSING_TYPE_RELATIVE;
+            shouldAppend = 1;
         } else {
             return ERROR; /*unsupported addressing type*/
         }
-    } else if (*operand == '#'){ /*addressing type 0*/
+    } else if (operand[0] == '#'){ /*addressing type 0*/
         if (allowedAddressing.immediate) {
-            int i;
-            for(i = 1; i < strlen(operand) - 1; i++){ /*checking if contains only numbers with leading minus or plus sign*/
+            for(i = 1; operand[i] != '\0'; i++){ /*checking if contains only numbers with leading minus or plus sign*/
                 if(!isdigit(operand[i])){ /* none number parameter in operand*/
                     if ((operand[i] == '-' || operand[i] == '+') && i != 1) { /* has minus or plus but not in the lead*/
                         return ERROR;
                     }
                 }
             }
-            instruction->origin_addressing = ADDRESSING_TYPE_IMMEDIATE;
-            instruction->origin_reg = 0;
+            addressingType = ADDRESSING_TYPE_IMMEDIATE;
+            shouldAppend = 1;
         } else {
             return ERROR; /*unsupported addressing type*/
         }
-    } else if (*operand == 'r'){ /*addressing type 3*/
-        if (allowedAddressing.reg) {
-            if (strlen(operand) > 2 || !isdigit(*(operand + 1))) {
-                return ERROR; /*error parsing register name*/
-            }
-            int regNum = atoi((operand + 1));
-            if (regNum < 0 || regNum > 7) {
-                instruction->origin_addressing = ADDRESSING_TYPE_REGISTER;
-                instruction->origin_reg = regNum;
-                return SUCCESS; /* no need to append another word*/
-            } else {
-                return ERROR; /* reg number isn't exist*/
-            }
+    } else if (operand[0] == 'r' && strlen(operand) == 2 && operand[1] >= '1' &&  operand[1] <= '8'){ /*addressing type 3*/
+        if(allowedAddressing.reg) {
+            addressingType = ADDRESSING_TYPE_REGISTER;
+            reg = atoi(operand + 1); /* get numeric value */
         } else {
             return ERROR; /*unsupported addressing type*/
         }
     } else { /*addressing type 1*/
         if (allowedAddressing.direct) {
-            instruction->origin_addressing = ADDRESSING_TYPE_DIRECT;
-            instruction->origin_reg = 0;
+            addressingType = ADDRESSING_TYPE_DIRECT;
+            shouldAppend = 1;
         } else {
             return ERROR; /*unsupported addressing type*/
         }
     }
-    return APPEND_FOR_ORIG;
-}
 
-/* checking destination operand and comparing it to the addressing type allowed for this command.
- * if something is wrong with the operands (using unsupported addressing type/wrong input in the operand) returns ERROR.
- * otherwise returning RESULT as the next action to do (how many and what words should be append).*/
-RESULT checkDestOperand(instruction_t * instruction, const char * operand, allowedAdd_t allowedAddressing){
-    if (*operand == '&'){ /*addressing type 2*/
-        if(allowedAddressing.relative){
-            instruction->dest_addressing = ADDRESSING_TYPE_RELATIVE;
-            instruction->dest_reg = 0;
-        } else {
-            return ERROR; /*unsupported addressing type*/
-        }
-    } else if (*operand == '#'){ /*addressing type 0*/
-        if (allowedAddressing.immediate) {
-            int i;
-            for(i = 1; i < strlen(operand) - 1; i++){ /*checking if contains only numbers with leading minus or plus sign*/
-                if(!isdigit(operand[i])){ /* none number parameter in .operand*/
-                    if ((operand[i] == '-' || operand[i] == '+') && i != 1) { /* has minus or plus but not in the lead*/
-                        return ERROR;
-                    }
-                }
-            }
-            instruction->dest_addressing = ADDRESSING_TYPE_IMMEDIATE;
-            instruction->dest_reg = 0;
-        } else {
-            return ERROR; /*unsupported addressing type*/
-        }
-    } else if (*operand == 'r'){ /*addressing type 3*/
-        if (allowedAddressing.reg) {
-            if (strlen(operand) > 2 || !isdigit(*(operand + 1))) {
-                return ERROR; /*error parsing register name*/
-            }
-            int regNum = atoi((operand + 1));
-            if (regNum < 0 || regNum > 7) {
-                instruction->dest_addressing = ADDRESSING_TYPE_REGISTER;
-                instruction->dest_reg = regNum;
-                return SUCCESS; /* no need to append another word*/
-            } else {
-                return ERROR; /* reg number isn't exist*/
-            }
-        } else {
-            return ERROR; /*unsupported addressing type*/
-        }
-    } else { /*addressing type 1*/
-        if (allowedAddressing.direct) {
-            instruction->dest_addressing = ADDRESSING_TYPE_DIRECT;
-            instruction->dest_reg = 0;
-        } else {
-            return ERROR; /*unsupported addressing type*/
-        }
+    if(operandSlot == ORIGIN) {
+        instruction->origin_addressing = addressingType;
+        instruction->origin_reg = reg;
+        if (shouldAppend)
+            return APPEND_FOR_ORIG;
+    } else if(operandSlot == DESTINATION) {
+        instruction->dest_addressing = addressingType;
+        instruction->dest_reg = reg;
+        if (shouldAppend)
+            return APPEND_FOR_DEST;
     }
-    return APPEND_FOR_DEST;
+
+    return SUCCESS;
 }
