@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 #include "definitions.h"
 #include "errors.h"
@@ -10,11 +9,13 @@
 #include "entries.h"
 #include "externals.h"
 
-RESULT replaceLabelWithAddress(list_t *symbolsList, list_t *externalsList, word_t *word, unsigned int instructionAddress, unsigned int wordAddress);
+RESULT replaceLabelWithAddress(const char *fileName, list_t *symbolsList, list_t *externalsList, word_t *word,
+                               unsigned int instructionAddress, unsigned int wordAddress);
 
-RESULT addAddressToEntry(list_t *symbolsList, entry_t *entry);
+RESULT addAddressToEntry(const char *fileName, list_t *symbolsList, entry_t *entry);
 
-RESULT secondPass(list_t *symbolsList, list_t *instructionsList, list_t *entriesList, list_t *externalsList){
+RESULT secondPass(const char *fileName, list_t *symbolsList, list_t *instructionsList, list_t *entriesList,
+                  list_t *externalsList) {
     RESULT result = SUCCESS;
     word_t *word;
     entry_t *entry;
@@ -32,7 +33,8 @@ RESULT secondPass(list_t *symbolsList, list_t *instructionsList, list_t *entries
         word = currentNode->content;
         switch (word->type) {
             case WORD_TYPE_LABEL:
-                if(replaceLabelWithAddress(symbolsList, externalsList, word, currentInstructionAddress, wordAddress) == ERROR)
+                if(replaceLabelWithAddress(fileName, symbolsList, externalsList, word, currentInstructionAddress,
+                                           wordAddress) == ERROR)
                     result = ERROR;
                 break;
             case WORD_TYPE_INSTRUCTION:
@@ -52,7 +54,7 @@ RESULT secondPass(list_t *symbolsList, list_t *instructionsList, list_t *entries
     currentNode = entriesList->head;
     while(currentNode != NULL){
         entry = currentNode->content;
-        if(addAddressToEntry(symbolsList, entry) == ERROR)
+        if(addAddressToEntry(fileName, symbolsList, entry) == ERROR)
             result = ERROR;
 
         currentNode = currentNode->next;
@@ -62,17 +64,17 @@ RESULT secondPass(list_t *symbolsList, list_t *instructionsList, list_t *entries
 }
 
 
-RESULT addAddressToEntry(list_t *symbolsList, entry_t *entry) {
+RESULT addAddressToEntry(const char *fileName, list_t *symbolsList, entry_t *entry) {
     /* find symbol with the same name */
     symbol_t *symbol = search(symbolsList, (int (*)(void *, void *)) compareSymbol, entry->name);
 
     if(symbol == NULL){
-        fprintf(stderr, "Error in line %ld: '%s' is not defined\n", entry->lineNumber, entry->name);
+        printError(fileName, entry->lineNumber, "'%s' is not defined\n", entry->name);
         return ERROR;
     }
 
     if(symbol->type == EXTERNAL){
-        fprintf(stderr, "Error in line %ld: External label '%s' cannot be used as operand in 'entry' command\n", entry->lineNumber, entry->name);
+        printError(fileName, entry->lineNumber, "External label '%s' cannot be used as operand in 'entry' command\n", entry->name);
         return ERROR;
     }
 
@@ -81,7 +83,8 @@ RESULT addAddressToEntry(list_t *symbolsList, entry_t *entry) {
     return SUCCESS;
 }
 
-RESULT replaceLabelWithAddress(list_t *symbolsList, list_t *externalsList, word_t *word, unsigned int instructionAddress, unsigned int wordAddress) {
+RESULT replaceLabelWithAddress(const char *fileName, list_t *symbolsList, list_t *externalsList, word_t *word,
+                               unsigned int instructionAddress, unsigned int wordAddress) {
     address_t *address;
     external_t *external;
 
@@ -89,7 +92,7 @@ RESULT replaceLabelWithAddress(list_t *symbolsList, list_t *externalsList, word_
     symbol_t *symbol = search(symbolsList, (int (*)(void *, void *)) compareSymbol, word->content.label->label);
 
     if(symbol == NULL){
-        fprintf(stderr, "Error in line %ld: '%s' is not defined\n", word->content.label->lineNumber, word->content.label->label);
+        printError(fileName, word->content.label->lineNumber, "'%s' is not defined\n", word->content.label->label);
         return ERROR;
     }
 
@@ -122,7 +125,7 @@ RESULT replaceLabelWithAddress(list_t *symbolsList, list_t *externalsList, word_
             break;
         case ADDRESSING_TYPE_RELATIVE:
             if(symbol->type == EXTERNAL){
-                fprintf(stderr, "Error in line %ld: External label '%s' cannot be used as relative operand\n",  word->content.label->lineNumber, word->content.label->label);
+                printError(fileName, word->content.label->lineNumber, "External label '%s' cannot be used as relative operand\n", word->content.label->label);
                 free(address);
                 return ERROR;
             }

@@ -70,9 +70,9 @@ void processFile(const char *baseFileName, list_t *symbolsList, list_t *instruct
 
     if(inputFile != NULL) {
         printf("Running first pass on input file: '%s'\n", fullInputFileName);
-        if(firstPass(inputFile, symbolsList, instructionsList, dataList, entriesList) == SUCCESS){
+        if(firstPass(baseFileName, inputFile, symbolsList, instructionsList, dataList, entriesList) == SUCCESS){
             printf("Running second pass on input file: '%s'\n", fullInputFileName);
-            if(secondPass(symbolsList, instructionsList, entriesList, externalsList) == SUCCESS){
+            if(secondPass(baseFileName, symbolsList, instructionsList, entriesList, externalsList) == SUCCESS){
                 printf("Generating output files for input file: '%s'\n", fullInputFileName);
                 outputFiles(baseFileName, instructionsList, dataList, entriesList, externalsList);
             }
@@ -83,7 +83,7 @@ void processFile(const char *baseFileName, list_t *symbolsList, list_t *instruct
         fclose(inputFile);
     }
     else{
-        fprintf(stderr, "Input file '%s' does not exist or cannot be opened!\n", fullInputFileName);
+        printError(baseFileName, -1, "Input file '%s' does not exist or cannot be opened!\n", fullInputFileName);
     }
 
     free(fullInputFileName);

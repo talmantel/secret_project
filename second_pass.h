@@ -7,7 +7,8 @@
 #include "definitions.h"
 #include "linked_list.h"
 
-RESULT secondPass(list_t *symbolsList, list_t *instructionsList, list_t *entriesList, list_t *externalsList);
+RESULT secondPass(const char *fileName, list_t *symbolsList, list_t *instructionsList, list_t *entriesList,
+                  list_t *externalsList);
 
 
 #endif //MMN14_SECOND_PASS_H

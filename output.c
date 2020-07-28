@@ -26,11 +26,10 @@ void outputFiles(const char *baseFileName, list_t *instructionsList, list_t *dat
     strcpy(currentFileName, baseFileName);
     strcat(currentFileName, MAIN_OUTPUT_FILE_SUFFIX);
 
-    printf("\n\nOpening output file: '%s'\n", currentFileName);
     outputFile = fopen(currentFileName, "w");
 
     if(outputFile == NULL)
-        fprintf(stderr, "Cannot write to file: '%s'!\n", currentFileName);
+        printError(baseFileName, -1, "Cannot write to file '%s'!\n", currentFileName);
     else {
         writeMainOutput(outputFile, instructionsList, dataList);
         fclose(outputFile);
@@ -45,11 +44,10 @@ void outputFiles(const char *baseFileName, list_t *instructionsList, list_t *dat
         strcpy(currentFileName, baseFileName);
         strcat(currentFileName, ENTRIES_FILE_SUFFIX);
 
-        printf("\n\nOpening output file: '%s'\n", currentFileName);
         outputFile = fopen(currentFileName, "w");
 
         if (outputFile == NULL)
-            fprintf(stderr, "Cannot write to file: '%s'!\n", currentFileName);
+            printError(baseFileName, -1, "Cannot write to file '%s'!\n", currentFileName);
         else {
             writeEntriesOutput(outputFile, entriesList);
             fclose(outputFile);
@@ -65,11 +63,10 @@ void outputFiles(const char *baseFileName, list_t *instructionsList, list_t *dat
         strcpy(currentFileName, baseFileName);
         strcat(currentFileName, EXTERNALS_FILE_SUFFIX);
 
-        printf("\n\nOpening output file: '%s'\n", currentFileName);
         outputFile = fopen(currentFileName, "w");
 
         if (outputFile == NULL)
-            fprintf(stderr, "Cannot write to file: '%s'!\n", currentFileName);
+            printError(baseFileName, -1, "Cannot write to file '%s'!\n", currentFileName);
         else{
             writeExternalsOutput(outputFile, externalsList);
             fclose(outputFile);
@@ -112,7 +109,7 @@ void writeEntriesOutput(FILE *outputFile, list_t *entriesList) {
     currentNode = entriesList->head;
     while(currentNode != NULL){
         entry = currentNode->content;
-        fprintf(outputFile, "%s %07ul\n", entry->name, entry->address);
+        fprintf(outputFile, "%s %07lu\n", entry->name, (long)entry->address);
         currentNode = currentNode->next;
     }
 }
@@ -123,7 +120,7 @@ void writeExternalsOutput(FILE *outputFile, list_t *externalsList) {
     currentNode = externalsList->head;
     while(currentNode != NULL){
         external = currentNode->content;
-        fprintf(outputFile, "%s %07ul\n", external->name, external->address);
+        fprintf(outputFile, "%s %07lu\n", external->name, external->address);
         currentNode = currentNode->next;
     }
 }
