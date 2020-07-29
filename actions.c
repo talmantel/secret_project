@@ -244,7 +244,7 @@ RESULT checkOperand(const char *fileName, long lineNum, instruction_t *instructi
             addressingType = ADDRESSING_TYPE_RELATIVE;
             shouldAppend = 1;
         } else {
-            printError(fileName, lineNum, "wrong addressing type for operand!\n", operand);
+            printError(fileName, lineNum, "wrong addressing type for operand '%s'!\n", operand);
             return ERROR; /*unsupported addressing type*/
         }
     } else if (operand[0] == '#'){ /*addressing type 0*/
@@ -260,7 +260,7 @@ RESULT checkOperand(const char *fileName, long lineNum, instruction_t *instructi
             addressingType = ADDRESSING_TYPE_IMMEDIATE;
             shouldAppend = 1;
         } else {
-            printError(fileName, lineNum, "wrong addressing type for operand!\n", operand);
+            printError(fileName, lineNum, "wrong addressing type for operand '%s'!\n", operand);
             return ERROR; /*unsupported addressing type*/
         }
     } else if (operand[0] == 'r' && strlen(operand) == 2 && operand[1] >= '0' &&  operand[1] <= '7'){ /*addressing type 3*/
@@ -268,7 +268,7 @@ RESULT checkOperand(const char *fileName, long lineNum, instruction_t *instructi
             addressingType = ADDRESSING_TYPE_REGISTER;
             reg = atoi(operand + 1); /* get numeric value */
         } else {
-            printError(fileName, lineNum, "wrong addressing type for operand!\n", operand);
+            printError(fileName, lineNum, "wrong addressing type for operand '%s'!\n", operand);
             return ERROR; /*unsupported addressing type*/
         }
     } else { /*addressing type 1*/
@@ -276,7 +276,7 @@ RESULT checkOperand(const char *fileName, long lineNum, instruction_t *instructi
             addressingType = ADDRESSING_TYPE_DIRECT;
             shouldAppend = 1;
         } else {
-            printError(fileName, lineNum, "wrong addressing type for operand!\n", operand);
+            printError(fileName, lineNum, "wrong addressing type for operand '%s'!\n", operand);
             return ERROR; /*unsupported addressing type*/
         }
     }

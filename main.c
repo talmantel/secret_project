@@ -57,6 +57,8 @@ void processFile(const char *baseFileName, list_t *symbolsList, list_t *instruct
     char *fullInputFileName;
     FILE *inputFile;
 
+    removeFiles(baseFileName);
+
     fullInputFileName = malloc((strlen(baseFileName) + strlen(INPUT_FILE_SUFFIX) + 1) * sizeof(char));
     if(fullInputFileName == NULL)
         handleError(ERROR_OUT_OF_MEMORY);

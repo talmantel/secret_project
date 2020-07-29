@@ -76,6 +76,39 @@ void outputFiles(const char *baseFileName, list_t *instructionsList, list_t *dat
     free(currentFileName);
 }
 
+void removeFiles(const char *baseFileName){
+    char *currentFileName;
+
+    /* object file */
+    currentFileName = malloc((strlen(baseFileName) + strlen(MAIN_OUTPUT_FILE_SUFFIX) + 1) * sizeof(char));
+    if(currentFileName == NULL)
+        handleError(ERROR_OUT_OF_MEMORY);
+
+    strcpy(currentFileName, baseFileName);
+    strcat(currentFileName, MAIN_OUTPUT_FILE_SUFFIX);
+    remove(currentFileName);
+
+    /* entries file */
+    currentFileName = malloc((strlen(baseFileName) + strlen(ENTRIES_FILE_SUFFIX) + 1) * sizeof(char));
+    if(currentFileName == NULL)
+        handleError(ERROR_OUT_OF_MEMORY);
+
+    strcpy(currentFileName, baseFileName);
+    strcat(currentFileName, ENTRIES_FILE_SUFFIX);
+    remove(currentFileName);
+
+    /* externals file */
+    currentFileName = malloc((strlen(baseFileName) + strlen(EXTERNALS_FILE_SUFFIX) + 1) * sizeof(char));
+    if(currentFileName == NULL)
+        handleError(ERROR_OUT_OF_MEMORY);
+
+    strcpy(currentFileName, baseFileName);
+    strcat(currentFileName, EXTERNALS_FILE_SUFFIX);
+    remove(currentFileName);
+
+    free(currentFileName);
+}
+
 void writeMainOutput(FILE *outputFile, list_t *instructionsList, list_t *dataList) {
     data_t *data;
     node_t *currentNode;
