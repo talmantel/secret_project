@@ -1,7 +1,7 @@
 ; line too long
 012345678901234567890123456789012345678901234567890123456789012345678901234567891
 
-;label too long /* TODO */
+;label too long
 01234567890123456789012345678901: .data 1
 
 ;Label redefinition
@@ -28,35 +28,36 @@ CODELABEL5: .data 5
 CODELABEL6: .data 5
 .extern CODELABEL6
 
-; Empty label  /* TODO should ignore empty labels? */
+; Empty label
 :  .data 1
 :  mov r0,r1
 
-; label must begin with a letter  /* TODO */
+; label must begin with a letter
 0label:  .data 1
 012:  .data 1
 0:  .data 1
 
-; label can only contain alphanumeric characters  /* TODO */
+; label can only contain alphanumeric characters
 some,label: mov r0,r1
-
-
 ;-----------------------------------------------------------------------------------------------
 
-; illegal comma  /* TODO */
+; illegal comma
 .data ,1
 
-; consecutive commas  /* TODO */
+; consecutive commas
 .data 1,,2
 
-; extra text  /* TODO */
+;missing comma
+.data 1 2
+
+; extra text
 .data 1,
 .data 1 extra text
 .string "asdfsad" extra text
 .entry entrylabel extra text
 .extern externalLabel extra text
 
-;not a number  /* TODO */
+;not a number
 .data 1a2
 .data 1-2
 .data 12a
@@ -68,10 +69,10 @@ some,label: mov r0,r1
 ; no quotes
 .string sadfsa
 
-; no end quote  /* TODO */
+; no end quote
 .string "sdafsdf
 
-; no start quote
+; no start quote /* works rename */
 .string sdafsdf"
 
 
@@ -80,7 +81,6 @@ some,label: mov r0,r1
 .string
 .entry
 .extern
-
 ;-----------------------------------------------------------------------------------------------
 
 ; command doesnt exist
@@ -104,12 +104,12 @@ sub LABEL
 lea
 lea operand
 
-; too many operands (needs 2)  /* TODO */
+; too many operands (needs 2)
 mov r0,r1,r2
 cmp #-0,MYLABEL,HERE
 add #-4,label,#7
 sub LABEL,r0,r2
-lea operand,r1
+lea operand,r1, r2
 mov r0,r1,r2,e3
 cmp #-0,MYLABEL,HERE,r3
 add #-4,label,#7,r2
@@ -127,7 +127,7 @@ jsr
 red
 prn
 
-; too many operands (needs 1)  /* TODO after 140 - extra text (null)*/
+; too many operands (needs 1)
 clr r1,r2
 not r1,r2
 inc r1,r2
@@ -231,7 +231,7 @@ r5:
 r6:
 r7:
 
-;label in command is a reserved word /* TODO works for .entry and .extern but not for commands */
+;label in command is a reserved word
 jmp mov
 jmp cmp
 jmp add
@@ -354,7 +354,7 @@ lea label,stop
 .entry r7
 
 
-;label must begin with a letter /* TODO */
+;label must begin with a letter
 mov 1d , label
 cmp 1d , label
 add 1d , label
@@ -384,7 +384,7 @@ mov .label, label
 .entry .label
 .extern .label
 
-;illegal character in label in command  /* TODO */
+;illegal character in label in command
 jmp labe&l
 mov somelabel, labe&l
 mov somel&abel, label
@@ -392,23 +392,23 @@ mov somel&abel, label
 .extern labe&l
 
 
-;illegal character in label in command (or wrong addressing)  /* TODO */
+;illegal character in label in command (or wrong addressing)
 .entry #label
 .extern #label
 .entry &label
 .extern &label
 
-;label in command too long  /* TODO */
+;label in command too long
 jmp l1234567890123456789012345678901
 .entry l1234567890123456789012345678901
 .extern l1234567890123456789012345678901
 
-;consecutive commas  /* TODO 407 gives extra text (null)*/
+;consecutive commas
 mov labell, , label2
 mov labell,, label2
 mov labell ,,label2
 
-;extra text  /* TODO all give extra text (null)*/
+;extra text
 mov label, label2 extra text
 mov label, label2 ,extra text
 mov label, label2, extra text

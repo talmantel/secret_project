@@ -129,7 +129,7 @@ RESULT replaceLabelWithAddress(const char *fileName, list_t *symbolsList, list_t
                 free(address);
                 return ERROR;
             }
-            /* TODO check conversion issues, and completion to 2 to get negative values */
+
             address->address = symbol->address - instructionAddress;
             address->are_type = A;
             break;
