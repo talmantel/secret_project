@@ -46,6 +46,10 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
                     printError(fileName, lineNum, "'%s' is a reserved word and cannot be used as a label!\n", label);
                     return ERROR;
                 }
+                if (strlen(label) > MAX_LABEL_LENGTH){
+                    printError(fileName, lineNum, "the label is too long!\n", NULL);
+                    return ERROR;
+                }
                 hasLabel = 1;
                 firstWord = 0;
                 continue;
@@ -92,9 +96,25 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
                         return ERROR; /*duplication in symbol with different type*/
                     }
                 }
+                if (*line == ','){ /*the data starting with a comma*/
+                    printError(fileName, lineNum, "first data is empty!\n", NULL);
+                    return ERROR;
+                }
+                for (i=0; i < strlen(line); i++){  /*checking if there are multiple consecutive commas*/
+                    if (*(line+i) == ',' && i < (strlen(line) - 1)){
+                        if (*(line + i + 1) == ','){
+                            printError(fileName, lineNum, "multiple consecutive commas!\n", NULL);
+                            return ERROR;
+                        }
+                    }
+                }
                 while((token = strtok_r(line, ",", &line))){ /*splitting by ,*/
-                    if(line && *line && *(line+1) == ','){ /* there are 2 commas in a row.*/
+                    /*if(line && *line && *(line+1) == ','){ /* there are 2 commas in a row.
                         printError(fileName, lineNum, "multiple consecutive commas!\n", NULL);
+                        return ERROR;
+                    }*/
+                    if(line && strlen(line) < 1){ /*nothing was after the comma*/
+                        printError(fileName, lineNum, "some of the data is empty!\n", NULL);
                         return ERROR;
                     }
                     for(i = 0; i < strlen(token); i++){ /*checking if contains only numbers with leading minus or plus sign*/
@@ -103,7 +123,8 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
                             i--;
                         }
                         if(!isdigit(token[i])){ /* none number parameter in .data*/
-                            if ((token[i] == '-' || token[i] == '+') && i != 0) { /* has minus or plus but not in the lead*/
+                            if (((token[i] == '-' || token[i] == '+') && i != 0) || (token[i] != '-' && token[i] != '+')) {
+                                /* has minus or plus but not in the lead or not a number or minus/plus sign*/
                                 printError(fileName, lineNum, "argument '%s' is not a number!\n", token);
                                 return ERROR;
                             }
@@ -112,6 +133,7 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
                     addDataToList(dataList, atoi(token), dataList->length);
                 }
             } else if (strcmp(token, ".string") == 0){
+                int j;
                 if (hasLabel){
                     if(addSymbolToList(symbolsList, DATA, label, dataList->length) == 0){
                         printError(fileName, lineNum, "label '%s' is already defined and cannot be redefined!\n", label);
@@ -126,6 +148,16 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
                 if (*(line + i) != '"'){ /*string not starting with quotes*/
                     printError(fileName, lineNum, "missing '\"' '%s'!\n", line + i);
                     return ERROR;
+                }
+                /*find the last occurrence of " and checks if there non-white chars after it
+                 * it will also catch if there is only starting " with out ending "*/
+                for (j = strlen(line) - 1; j >= 0; j--){
+                    if (*(line + j) == '\"')
+                        break;
+                    if (!isspace(*(line + j))){
+                        printError(fileName, lineNum, "there is data outside of the quotes!\n", NULL);
+                        return ERROR;
+                    }
                 }
                 /*get the rest of the line after .string
                  * starting from index i + 1 - i for the white spaces, 1 for the first quote */
@@ -186,8 +218,13 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
                         if (!isspace(*(line+j)))
                             break;
                     }
-                    destOper = strtok_r(line + j, " ", &line); /*cleaning tailing spaces and checking if there was space in the middle*/
-                    if (line && strlen(line) > 0) {  /*there was a space in the middle*/
+                    token = strtok_r(line + j, ",", &line); /*checking if entered more than 2 operands*/
+                    if (line && strlen(line) > 0) {  /*there was a comma in the middle*/
+                        printError(fileName, lineNum, "too many operands. the maximum number is two!\n", NULL);
+                        return ERROR;
+                    }
+                    destOper = strtok_r(token, " ", &token); /*cleaning tailing spaces and checking if there was space in the middle*/
+                    if (token && strlen(token) > 0) {  /*there was a space in the middle*/
                         printError(fileName, lineNum, "extra text '%s' after instruction!\n", token);
                         return ERROR;
                     }

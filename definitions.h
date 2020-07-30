@@ -9,6 +9,7 @@ typedef enum {
     APPEND_FOR_BOTH = 3 /*need to add two words for representing both the origin and the destination operands*/
 } RESULT;
 #define MAX_LINE_LENGTH 80
+#define MAX_LABEL_LENGTH 31
 #define START_ADDRESS 100
 #define INPUT_FILE_SUFFIX ".as"
 #define ENTRIES_FILE_SUFFIX ".ent"

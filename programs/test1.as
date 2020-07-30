@@ -20,32 +20,32 @@ CODELABEL3: mov r0,r1
 ; no error
 0123456789012345678901234567890: .data 1
 
-;label too long /* TODO */
+;label too long
 01234567890123456789012345678901: .data 1
 
-; illegal comma /* TODO */
+; illegal comma
 .data ,1
 
-; extra text /* TODO */
+; extra text
 .data 1,
 
-; consecutive commas /* TODO */
+; consecutive commas
 .data 1,,2
 
-;not a number /* TODO */
+;not a number
 .data 1a2
 
 ;not a number
 .data 1-2
 
 ;not a number
-.data 12a /* TODO */
+.data 12a
 
 ; no quotes
 .string sadfsa
 
 ; no end quote
-.string "sdafsdf /* TODO */
+.string "sdafsdf
 
 ; no start quote
 .string sdafsdf"
@@ -63,10 +63,10 @@ CODELABEL3: mov r0,r1
 ; no argument
 .external
 
-;too many arguments /* TODO */
+;too many arguments
 .data 1 extra text
 
-;too many arguments /* TODO */
+;too many arguments
 .string "asdfsad" extra text
 
 ;too many arguments
@@ -76,7 +76,7 @@ entrylabel: .data 5
 ;too many arguments
 .extern externalLabel extra text
 
-; Operand count errors /* TODO 82 */
+; Operand count errors
 mov
 mov r0
 cmp #-0,MYLABEL,HERE
@@ -133,7 +133,6 @@ not &op0
 inc #-1
 dec &op0
 red &op0
-; /* TODO 37, 38 */
 jmp op0
 bne op0
 jsr #-1
