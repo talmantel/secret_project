@@ -13,7 +13,7 @@ RESULT checkOperand(const char *fileName, long lineNum, instruction_t *instructi
 
 action_t actions[NUM_OF_ACTIONS] = {
         "mov", 0, 0, {.addressing = {1,1,0,1}}, {.addressing = {0, 1, 0, 1}},
-        "cmp", 0, 0, {.addressing = {1,1,0,1}}, {.addressing = {1, 1, 0, 1}},
+        "cmp", 1, 0, {.addressing = {1,1,0,1}}, {.addressing = {1, 1, 0, 1}},
         "add", 2, 1, {.addressing = {1,1,0,1}}, {.addressing = {0, 1, 0, 1}},
         "sub", 2, 2, {.addressing = {1,1,0,1}}, {.addressing = {0, 1, 0, 1}},
         "lea", 4, 0, {.addressing = {0,1,0,0}}, {.addressing = {0, 1, 0, 1}},

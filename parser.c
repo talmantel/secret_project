@@ -49,7 +49,7 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
             }
         }
         firstWord = 0;
-        if (*token == '.'){ /*start with '.' -> means its .....*/
+        if (*token == '.'){ /*start with '.' -> means its an instruction*/
             if(!line || !*line){
                 printError(fileName, lineNum, "instruction missing argument!\n", NULL);
                 return ERROR;
@@ -64,7 +64,7 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
                 }
 
                 if (addSymbolToList(symbolsList, EXTERNAL, token, 0) == 0){
-                    printError(fileName, lineNum, "symbol '%s' is already defined and cannot be redefined as external!\n", token);
+                    printError(fileName, lineNum, "label '%s' is already defined and cannot be redefined as external!\n", token);
                     return ERROR; /*duplication in symbol with different type*/
                 }
                 token = strtok_r(line, " ", &line);
@@ -153,7 +153,7 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
                         break;
                 }
                 if (*(line + i) != '"'){ /*string not starting with quotes*/
-                    printError(fileName, lineNum, "missing '\"' '%s'!\n", line + i);
+                    printError(fileName, lineNum, "missing start quotes before '%s'!\n", line + i);
                     return ERROR;
                 }
                 /*find the last occurrence of " and checks if there non-white chars after it

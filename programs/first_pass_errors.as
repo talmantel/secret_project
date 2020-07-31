@@ -75,6 +75,9 @@ some,label: mov r0,r1
 ; no start quote /* works rename */
 .string sdafsdf"
 
+;illegal character in string
+.string "	 tab:	"
+
 
 ;missing argument
 .data
@@ -106,15 +109,15 @@ lea operand
 
 ; too many operands (needs 2)
 mov r0,r1,r2
-cmp #-0,MYLABEL,HERE
-add #-4,label,#7
+cmp #-0,LABEL,LABEL2
+add #-14,label,#91
 sub LABEL,r0,r2
-lea operand,r1, r2
+lea label,r1, r2
 mov r0,r1,r2,e3
-cmp #-0,MYLABEL,HERE,r3
-add #-4,label,#7,r2
+cmp #-0,LABEL,LABEL2,r3
+add #-4,label,#5,r2
 sub LABEL,r0,r2,r2
-lea operand,r1,r3
+lea operand,r4,r5
 
 ; missing operands (needs 1)
 clr
@@ -156,53 +159,53 @@ stop myprog,hel2
 
 
 ; Addressing type errors (by booklet p.34)
-mov &op0,op1
-mov &op0,&op1
-mov op0,&op1
-mov &op0,#2
-mov op0,#2
-mov #-4,#2
-cmp &op0,op1
-cmp &op0,&r0
-cmp r0,&op1
-add &op0,op1
-add &op0,&op1
-add op0,&op1
-add &op0,#2
-add op0,#2
+mov &lb1,lb2
+mov &lb1,&lb2
+mov lb1,&lb2
+mov &lb1,#2
+mov lb1,#2
+mov #14,#2
+cmp &lb1,lb2
+cmp &lb1,&r0
+cmp r0,&lb2
+add &lb1,lb2
+add &lb1,&lb2
+add lb1,&lb2
+add &lb1,#2
+add lb1,#2
 add #-4,#2
-sub &op0,op1
-sub &op0,&op1
-sub op0,&op1
-sub &op0,#2
-sub op0,#2
-sub #-4,#2
-lea &op0,op1
-lea &op0,&op1
-lea op0,&op1
-lea &op0,#2
-lea op0,#2
+sub &lb1,lb2
+sub &lb1,&lb2
+sub lb1,&lb2
+sub &lb1,#20
+sub lb1,#20
+sub #10,#20
+lea &lb1,lb2
+lea &lb1,&lb2
+lea lb1,&lb2
+lea &lb1,#2
+lea lb1,#2
 lea #-4,#2
 lea #-4,r0
-lea r0,op1
+lea r0,lb2
 lea r0,r1
-clr &op0
-not &op0
-inc &op0
-dec &op0
-red &op0
-clr #-1
-not #-1
-inc #-1
-dec #-1
-red #-1
+clr &lb1
+not &lb1
+inc &lb1
+dec &lb1
+red &lb1
+clr #9
+not #9
+inc #9
+dec #9
+red #9
 jmp r0
 bne r0
 jsr r0
-jmp #-1
-bne #-1
-jsr #-1
-prn &op0
+jmp #-9
+bne #-9
+jsr #-9
+prn &lb1
 mov &r0, label
 
 ;label is using reserved words
