@@ -17,7 +17,7 @@ l5: .string "abc"cba"acb"
 .extern     ext1
 .extern     ext2
 
-;/* TODO 19 gives: Missing comma at ' '*/
+;/* TODO 21 gives: Missing comma at ' '*/
 cmp ext1  , ext2
 cmp     #-10, ext1
 cmp     r1 , l1
