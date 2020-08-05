@@ -41,4 +41,5 @@ void printError(const char *fileName, long lineNum, const char *format, const vo
         else
             fprintf(stderr, errorFormat, fileName, lineNum, value);
     }
+    free(errorFormat);
 }

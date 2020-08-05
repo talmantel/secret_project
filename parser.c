@@ -40,6 +40,7 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
 
                 if(checkIfLegalLabel(fileName, lineNum, label) == ERROR) {
                     /* error printed in checkIfLegalLabel */
+                    free(label);
                     return ERROR;
                 }
 
@@ -52,6 +53,7 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
         if (*token == '.'){ /*start with '.' -> means its an instruction*/
             if(!line || !*line){
                 printError(fileName, lineNum, "instruction missing argument!\n", NULL);
+                free(label);
                 return ERROR;
             }
 
@@ -60,16 +62,19 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
 
                 if(checkIfLegalLabel(fileName, lineNum, token) == ERROR) {
                     /* error printed in checkIfLegalLabel */
+                    free(label);
                     return ERROR;
                 }
 
                 if (addSymbolToList(symbolsList, EXTERNAL, token, 0) == 0){
                     printError(fileName, lineNum, "label '%s' is already defined and cannot be redefined as external!\n", token);
+                    free(label);
                     return ERROR; /*duplication in symbol with different type*/
                 }
                 token = strtok_r(line, " ", &line);
                 if (token != NULL){ /*extra after label or space inside the label -> error*/
                     printError(fileName, lineNum, "extra text '%s' after instruction!\n", token);
+                    free(label);
                     return ERROR;
                 }
             } else if (strcmp(token, ".entry") == 0){
@@ -77,6 +82,7 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
 
                 if(checkIfLegalLabel(fileName, lineNum, token) == ERROR) {
                     /* error printed in checkIfLegalLabel */
+                    free(label);
                     return ERROR;
                 }
 
@@ -84,23 +90,27 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
                 token = strtok_r(line, " ", &line);
                 if (token != NULL){ /*extra after label -> error*/
                     printError(fileName, lineNum, "extra text '%s' after instruction!\n", token);
+                    free(label);
                     return ERROR;
                 }
             } else if (strcmp(token, ".data") == 0){
                 if (hasLabel){
                     if(addSymbolToList(symbolsList, DATA, label, dataList->length) == 0){
                         printError(fileName, lineNum, "label '%s' is already defined and cannot be redefined!\n", label);
+                        free(label);
                         return ERROR; /*duplication in symbol with different type*/
                     }
                 }
                 if (*line == ','){ /*the data starting with a comma*/
                     printError(fileName, lineNum, "Illegal comma!\n", NULL);
+                    free(label);
                     return ERROR;
                 }
                 for (i=0; i < strlen(line); i++){  /*checking if there are multiple consecutive commas*/
                     if (*(line+i) == ',' && i < (strlen(line) - 1)){
                         if (*(line + i + 1) == ','){
                             printError(fileName, lineNum, "multiple consecutive commas!\n", NULL);
+                            free(label);
                             return ERROR;
                         }
                     }
@@ -112,6 +122,7 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
                     }*/
                     if(line && strlen(line) < 1){ /*nothing was after the comma*/
                         printError(fileName, lineNum, "Missing operand!\n", NULL);
+                        free(label);
                         return ERROR;
                     }
 
@@ -126,6 +137,7 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
                                 for(; i < strlen(token); i++){
                                     if(!isspace(token[i])){
                                         printError(fileName, lineNum, "Missing comma at '%s'!\n", token+i);
+                                        free(label);
                                         return ERROR;
                                     }
                                 }
@@ -133,6 +145,7 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
                             else if (((token[i] == '-' || token[i] == '+') && i != 0) || (token[i] != '-' && token[i] != '+')) {
                                 /* has minus or plus but not in the lead or not a number or minus/plus sign*/
                                 printError(fileName, lineNum, "argument '%s' is not a number!\n", token);
+                                free(label);
                                 return ERROR;
                             }
                         }
@@ -144,6 +157,7 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
                 if (hasLabel){
                     if(addSymbolToList(symbolsList, DATA, label, dataList->length) == 0){
                         printError(fileName, lineNum, "label '%s' is already defined and cannot be redefined!\n", label);
+                        free(label);
                         return ERROR; /*duplication in symbol with different type*/
                     }
                 }
@@ -154,6 +168,7 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
                 }
                 if (*(line + i) != '"'){ /*string not starting with quotes*/
                     printError(fileName, lineNum, "missing start quotes before '%s'!\n", line + i);
+                    free(label);
                     return ERROR;
                 }
                 /*find the last occurrence of " and checks if there non-white chars after it
@@ -163,6 +178,7 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
                         break;
                     if (!isspace(*(line + j))){
                         printError(fileName, lineNum, "no end quotes\n", NULL);
+                        free(label);
                         return ERROR;
                     }
                 }
@@ -172,6 +188,7 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
                 for(i = 0; token[i]; i++){
                     if (!isprint(token[i])){ /*check if this a printable char*/
                         printError(fileName, lineNum, "non printable character '%c' in string argument!\n", token + i);
+                        free(label);
                         return ERROR;
                     }
                     addDataToList(dataList, token[i], dataList->length);
@@ -179,6 +196,7 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
                 addDataToList(dataList, '\0', dataList->length);
             } else { /*error - start with '.' but none of the possibilities*/
                 printError(fileName, lineNum, "instruction '%s' does not exist!\n", token);
+                free(label);
                 return ERROR;
             }
             hasLabel = 0;
@@ -188,7 +206,7 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
             char * command;
             char * origOper;
             char * destOper;
-            RESULT result;
+            RESULT result = SUCCESS;
             int j;
             instruction_t * instruction = malloc(sizeof(instruction_t));
             command = malloc((strlen(token)+1)*sizeof(char));
@@ -243,13 +261,18 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
                 }
             }
             if(result == ERROR){
+                free(label);
                 free(command);
+                free(instruction);
                 return ERROR;
             }
 
             result = setCommandParameters(fileName, lineNum, command, origOper, destOper, instruction);
             if (result == ERROR){
                 /* error was printed already*/
+                free(label);
+                free(command);
+                free(instruction);
                 return ERROR;
             } else {
                 word_t * word = malloc(sizeof(word_t));
@@ -259,10 +282,16 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
                 if (hasLabel){
                     if(addSymbolToList(symbolsList, CODE, label, instructionsList->length-1) == 0){
                         printError(fileName, lineNum, "label '%s' is already defined and cannot be redefined!\n", label);
+                        free(label);
+                        free(command);
+                        free(instruction);
                         return ERROR; /*duplication in symbol with different type*/
                     }
                 }
                 if (result == SUCCESS){ /*no need to append any extra word*/
+                    free(label);
+                    free(command);
+                    free(instruction);
                     return SUCCESS;
                 }
                 if (result & APPEND_FOR_ORIG){
@@ -305,6 +334,7 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
                 }
             }
             free(command);
+            free(instruction);
         }
     }
     return SUCCESS;

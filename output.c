@@ -87,6 +87,7 @@ void removeFiles(const char *baseFileName){
     strcpy(currentFileName, baseFileName);
     strcat(currentFileName, MAIN_OUTPUT_FILE_SUFFIX);
     remove(currentFileName);
+    free(currentFileName);
 
     /* entries file */
     currentFileName = malloc((strlen(baseFileName) + strlen(ENTRIES_FILE_SUFFIX) + 1) * sizeof(char));
@@ -96,6 +97,7 @@ void removeFiles(const char *baseFileName){
     strcpy(currentFileName, baseFileName);
     strcat(currentFileName, ENTRIES_FILE_SUFFIX);
     remove(currentFileName);
+    free(currentFileName);
 
     /* externals file */
     currentFileName = malloc((strlen(baseFileName) + strlen(EXTERNALS_FILE_SUFFIX) + 1) * sizeof(char));
