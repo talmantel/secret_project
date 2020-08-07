@@ -13,6 +13,7 @@
 int addSymbolToList(list_t * symbolsList, SYMBOL_TYPE type, char * name, int address);
 int addDataToList(list_t * dataList, int value, int address);
 int addEntryToList(list_t *entriesList, char *name, long lineNum);
+int isOnlyWhiteSpaces(const char * text);
 
 RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList) {
     char * token;
@@ -240,7 +241,7 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
                     else {
                         origOper = strtok_r(token, " ",
                                             &token); /*cleaning tailing spaces and checking if there was space in the middle*/
-                        if (token && strlen(token) > 0) {  /*there was a space in the middle*/
+                        if (token && strlen(token) > 0 && isOnlyWhiteSpaces(token)) {  /*there was a space in the middle*/
                             printError(fileName, lineNum, "Missing comma at '%s'!\n", token);
                             result = ERROR;
                         } else {
@@ -375,5 +376,15 @@ int addDataToList(list_t * dataList, int value, int address){
     data_t * data = malloc(sizeof(data_t));
     data->value = value;
     addNode(dataList, data);
+    return 1;
+}
+
+int isOnlyWhiteSpaces(const char * text){
+    int i;
+    for (i = 0; i < strlen(text); i++){
+        if (!isspace(*(text+i))){
+            return 0;
+        }
+    }
     return 1;
 }
