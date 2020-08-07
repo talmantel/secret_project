@@ -10,7 +10,6 @@ bne r01
 label: .data 1
 doesntexist:  .extern ex
 doesntexist: .entry label
-doesntexist:
 
 
 ;----------------------------------------------------------------

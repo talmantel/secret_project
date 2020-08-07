@@ -21,7 +21,7 @@ void outputFiles(const char *baseFileName, list_t *instructionsList, list_t *dat
     /* output object file */
     currentFileName = malloc((strlen(baseFileName) + strlen(MAIN_OUTPUT_FILE_SUFFIX) + 1) * sizeof(char));
     if(currentFileName == NULL)
-        handleError(ERROR_OUT_OF_MEMORY);
+        handleMallocError();
 
     strcpy(currentFileName, baseFileName);
     strcat(currentFileName, MAIN_OUTPUT_FILE_SUFFIX);
@@ -39,7 +39,7 @@ void outputFiles(const char *baseFileName, list_t *instructionsList, list_t *dat
     if(entriesList->length > 0) {
         currentFileName = realloc(currentFileName, (strlen(baseFileName) + strlen(ENTRIES_FILE_SUFFIX) + 1) * sizeof(char));
         if (currentFileName == NULL)
-            handleError(ERROR_OUT_OF_MEMORY);
+            handleMallocError();
 
         strcpy(currentFileName, baseFileName);
         strcat(currentFileName, ENTRIES_FILE_SUFFIX);
@@ -58,7 +58,7 @@ void outputFiles(const char *baseFileName, list_t *instructionsList, list_t *dat
     if(externalsList->length > 0) {
         currentFileName = realloc(currentFileName, (strlen(baseFileName) + strlen(EXTERNALS_FILE_SUFFIX) + 1) * sizeof(char));
         if (currentFileName == NULL)
-            handleError(ERROR_OUT_OF_MEMORY);
+            handleMallocError();
 
         strcpy(currentFileName, baseFileName);
         strcat(currentFileName, EXTERNALS_FILE_SUFFIX);
@@ -82,27 +82,25 @@ void removeFiles(const char *baseFileName){
     /* object file */
     currentFileName = malloc((strlen(baseFileName) + strlen(MAIN_OUTPUT_FILE_SUFFIX) + 1) * sizeof(char));
     if(currentFileName == NULL)
-        handleError(ERROR_OUT_OF_MEMORY);
+        handleMallocError();
 
     strcpy(currentFileName, baseFileName);
     strcat(currentFileName, MAIN_OUTPUT_FILE_SUFFIX);
     remove(currentFileName);
-    free(currentFileName);
 
     /* entries file */
-    currentFileName = malloc((strlen(baseFileName) + strlen(ENTRIES_FILE_SUFFIX) + 1) * sizeof(char));
+    currentFileName = realloc(currentFileName, (strlen(baseFileName) + strlen(ENTRIES_FILE_SUFFIX) + 1) * sizeof(char));
     if(currentFileName == NULL)
-        handleError(ERROR_OUT_OF_MEMORY);
+        handleMallocError();
 
     strcpy(currentFileName, baseFileName);
     strcat(currentFileName, ENTRIES_FILE_SUFFIX);
     remove(currentFileName);
-    free(currentFileName);
 
     /* externals file */
-    currentFileName = malloc((strlen(baseFileName) + strlen(EXTERNALS_FILE_SUFFIX) + 1) * sizeof(char));
+    currentFileName = realloc(currentFileName, (strlen(baseFileName) + strlen(EXTERNALS_FILE_SUFFIX) + 1) * sizeof(char));
     if(currentFileName == NULL)
-        handleError(ERROR_OUT_OF_MEMORY);
+        handleMallocError();
 
     strcpy(currentFileName, baseFileName);
     strcat(currentFileName, EXTERNALS_FILE_SUFFIX);

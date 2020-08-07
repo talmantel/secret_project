@@ -3,12 +3,9 @@
 #include <string.h>
 #include "errors.h"
 
-void handleError(ERROR_TYPE error){
-    switch (error) {
-        case ERROR_OUT_OF_MEMORY:
-            fprintf(stderr, "FATAL ERROR: Out of memory\n");
-            exit(1);
-    }
+void handleMallocError() {
+    fprintf(stderr, "FATAL ERROR: Out of memory\n");
+    exit(1);
 }
 
 void printError(const char *fileName, long lineNum, const char *format, const void *value){
@@ -20,10 +17,14 @@ void printError(const char *fileName, long lineNum, const char *format, const vo
 
     if(lineNum == -1) {
         errorFormat = malloc(strlen(formatPrefix) + strlen(format) + 1);
+        if(errorFormat == NULL)
+            handleMallocError();
         strcpy(errorFormat, formatPrefix);
     }
     else {
         errorFormat = malloc(strlen(formatPrefixWithLine) + strlen(format) + 1);
+        if(errorFormat == NULL)
+            handleMallocError();
         strcpy(errorFormat, formatPrefixWithLine);
     }
 

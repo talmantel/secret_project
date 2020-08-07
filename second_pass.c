@@ -98,7 +98,7 @@ RESULT replaceLabelWithAddress(const char *fileName, list_t *symbolsList, list_t
 
     address = malloc(sizeof(address_t));
     if(address == NULL)
-        handleError(ERROR_OUT_OF_MEMORY);
+        handleMallocError();
 
     switch (word->content.label->addressing_type) {
         case ADDRESSING_TYPE_DIRECT:
@@ -109,11 +109,11 @@ RESULT replaceLabelWithAddress(const char *fileName, list_t *symbolsList, list_t
                 /* add to list of externals */
                 external = malloc(sizeof(external_t));
                 if(external == NULL)
-                    handleError(ERROR_OUT_OF_MEMORY);
+                    handleMallocError();
 
                 external->name = malloc((strlen(symbol->name) + 1) * sizeof(char));
                 if(external->name == NULL)
-                    handleError(ERROR_OUT_OF_MEMORY);
+                    handleMallocError();
                 strcpy(external->name, symbol->name);
                 external->address = wordAddress;
                 addNode(externalsList, external);

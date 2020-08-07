@@ -5,7 +5,7 @@
 list_t * initLinkedList(){
     list_t * list = malloc(sizeof(list_t));
     if(list == NULL)
-        handleError(ERROR_OUT_OF_MEMORY);
+        handleMallocError();
 
     list->head = NULL;
     list->tail = NULL;
@@ -17,7 +17,7 @@ list_t * initLinkedList(){
 void addNode(list_t * list, void *content){
     node_t * newNode = malloc(sizeof(node_t));
     if(newNode == NULL)
-        handleError(ERROR_OUT_OF_MEMORY);
+        handleMallocError();
 
     newNode->content = content;
     newNode->next =NULL;

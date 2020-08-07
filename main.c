@@ -61,7 +61,7 @@ void processFile(const char *baseFileName, list_t *symbolsList, list_t *instruct
 
     fullInputFileName = malloc((strlen(baseFileName) + strlen(INPUT_FILE_SUFFIX) + 1) * sizeof(char));
     if(fullInputFileName == NULL)
-        handleError(ERROR_OUT_OF_MEMORY);
+        handleMallocError();
 
     strcpy(fullInputFileName, baseFileName);
     strcat(fullInputFileName, INPUT_FILE_SUFFIX);

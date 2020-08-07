@@ -208,6 +208,10 @@ jsr #-9
 prn &lb1
 mov &r0, label
 
+;label without instruction
+labelwithoutinstruct:
+          labelwithoutinstruct:
+
 ;label is using reserved words
 mov:
 cmp:
