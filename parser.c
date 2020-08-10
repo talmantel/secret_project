@@ -27,6 +27,15 @@ void appendWord(long lineNum, ADDRESSING_TYPE addressingType, const char *oper, 
 
 char *strtok_r (char *s, const char *delim, char **save_ptr);
 
+/*this function parses a line.
+ * the function returns ERROR if any error occured and SUCCESS otherwise.
+ * param fileName -
+ * param line - the line string to be parsed
+ * param lineNum -
+ * param symbolsList - a pointer to the symbols list
+ * param wordList - a pointer to the word list
+ * param dataList - a pointer to the data list
+ * param entriesList - a pointer to the entries list*/
 RESULT parseLine(const char *fileName, char *line, long lineNum, list_t *symbolsList, list_t *wordList, list_t *dataList, list_t *entriesList) {
     char * token;
     int i;
@@ -75,6 +84,11 @@ RESULT parseLine(const char *fileName, char *line, long lineNum, list_t *symbols
     return result;
 }
 
+/*a function to add the symbol to the symbols list
+ * param symbolsList - a pointer to the symbols list
+ * param type - the type of the symbol
+ * param name - the name of the symbol
+ * param address - the line address of the symbol*/
 int addSymbolToList(list_t *symbolsList, SYMBOL_TYPE type, char * name, int address){
     symbol_t * exist = search(symbolsList, compareSymbol, name);
     if (!exist){
@@ -97,6 +111,10 @@ int addSymbolToList(list_t *symbolsList, SYMBOL_TYPE type, char * name, int addr
     return 0;
 }
 
+/*a function to add the entry to the entries list
+ * param entriesList - a pointer to the entries list
+ * param name - the name of the entry
+ * param lineNum - the line number of the entry*/
 int addEntryToList(list_t *entriesList, char *name, long lineNum) {
     entry_t * exist = search(entriesList, compareEntry, name);
     if (!exist){
@@ -114,6 +132,9 @@ int addEntryToList(list_t *entriesList, char *name, long lineNum) {
     return 0;
 }
 
+/*a function to add the data to the data list
+ * param dataList - a pointer to the data list
+ * param value - the value of the data */
 int addDataToList(list_t * dataList, int value){
     data_word_t * data = malloc(sizeof(data_word_t));
     if(data == NULL)
@@ -123,6 +144,9 @@ int addDataToList(list_t * dataList, int value){
     return 1;
 }
 
+/*this function checks if a given string contains only white spaces.
+ * the function returns 1 if yes and 0 otherwise.
+ * param text - the string to be checked.*/
 int isOnlyWhiteSpaces(const char * text){
     int i;
     for (i = 0; i < strlen(text); i++){
@@ -133,6 +157,13 @@ int isOnlyWhiteSpaces(const char * text){
     return 1;
 }
 
+/* a function to handle a label in the line.
+ * the function processes the parsed line and checks if there is a label in the line.
+ * the function returns ERROR if there was any error and SUCCESS otherwise.
+ * param fileName - the name of the file that is being currently parsed.
+ * param lineNum - the line number that is currently being parsed.
+ * param token  - the string that is currently being parsed
+ * param label - a pointer to be updated to save the label if exist*/
 RESULT handleLabel(const char *fileName, long lineNum, char *token, char **label){
     if (*(token + strlen(token) - 1) == ':') { /*its a label..*/
         *label = calloc(strlen(token), sizeof(char));
@@ -148,6 +179,17 @@ RESULT handleLabel(const char *fileName, long lineNum, char *token, char **label
     return SUCCESS;
 }
 
+/* a function to handle a line of instruction (start with '.').
+ * the function processes the parsed line and calls the perspective function according the type of the instruction.
+ * the function returns ERROR if there was any error and SUCCESS otherwise.
+ * param fileName - the name of the file that is being currently parsed.
+ * param lineNum - the line number that is currently being parsed.
+ * param instruction - the instruction string to determine the type
+ * param line - the rest of the line after '.data'
+ * param label - the label of the line if exist
+ * param symbolsList - a pointer to the symbols list
+ * param dataList - a pointer to the data list
+ * param entriesList - a pointer to the entries list*/
 RESULT handleInstruction(const char *fileName, long lineNum, char *instruction, char *line, char *label, list_t *symbolsList, list_t *dataList, list_t *entriesList){
     if(!line || !*line){
         printErrorWithLine(fileName, lineNum, "instruction missing argument!\n", NULL);
@@ -170,7 +212,13 @@ RESULT handleInstruction(const char *fileName, long lineNum, char *instruction, 
     return SUCCESS;
 }
 
-
+/* a function to handle a line of extern instruction (.extern).
+ * the function processes the parsed line and adds the extern's symbol to the symbols list.
+ * the function returns ERROR if there was any error and SUCCESS otherwise.
+ * param fileName - the name of the file that is being currently parsed.
+ * param lineNum - the line number that is currently being parsed.
+ * param line - the rest of the line after '.entry'
+ * param symbolsList - a pointer to the symbols list */
 RESULT handleExternInstruction(const char *fileName, long lineNum, char *line, list_t *symbolsList){
     char *token = strtok_r(line, " ", &line);
 
@@ -193,6 +241,13 @@ RESULT handleExternInstruction(const char *fileName, long lineNum, char *line, l
     return SUCCESS;
 }
 
+/* a function to handle a line of entry instruction (.entry).
+ * the function processes the parsed line and adds the entry to the entries list.
+ * the function returns ERROR if there was any error and SUCCESS otherwise.
+ * param fileName - the name of the file that is being currently parsed.
+ * param lineNum - the line number that is currently being parsed.
+ * param line - the rest of the line after '.entry'
+ * param entriesList - a pointer to the entries list */
 RESULT handleEntryInstruction(const char *fileName, long lineNum, char *line, list_t *entriesList){
     char *token = strtok_r(line, " ", &line);
 
@@ -211,6 +266,15 @@ RESULT handleEntryInstruction(const char *fileName, long lineNum, char *line, li
     return SUCCESS;
 }
 
+/* a function to handle a line of data instruction (.data).
+ * the function processes the parsed line and adds the data to the data list.
+ * the function returns ERROR if there was any error and SUCCESS otherwise.
+ * param fileName - the name of the file that is being currently parsed.
+ * param lineNum - the line number that is currently being parsed.
+ * param line - the rest of the line after '.data'
+ * param label - the label of the line if exist
+ * param symbolsList - a pointer to the symbols list
+ * param dataList - a pointer to the data list */
 RESULT handleDataInstruction(const char *fileName, long lineNum, char *line, char *label, list_t *symbolsList, list_t *dataList){
     char * token;
     int i;
@@ -235,7 +299,7 @@ RESULT handleDataInstruction(const char *fileName, long lineNum, char *line, cha
     }
 
     while((token = strtok_r(line, ",", &line))){ /*splitting by ,*/
-        if(line && strlen(line) == 0){ /*nothing was after the comma*/
+        if(line && strlen(line) < 1){ /*nothing was after the comma*/
             printErrorWithLine(fileName, lineNum, "Missing operand!\n", NULL);
             return ERROR;
         }
@@ -268,6 +332,15 @@ RESULT handleDataInstruction(const char *fileName, long lineNum, char *line, cha
     return SUCCESS;
 }
 
+/* a function to handle a line of string instruction (.string).
+ * the function processes the parsed line and adds the string to the data list.
+ * the function returns ERROR if there was any error and SUCCESS otherwise.
+ * param fileName - the name of the file that is being currently parsed.
+ * param lineNum - the line number that is currently being parsed.
+ * param line - the rest of the line after '.string'
+ * param label - the label of the line if exist
+ * param symbolsList - a pointer to the symbols list
+ * param dataList - a pointer to the data list */
 RESULT handleStringInstruction(const char *fileName, long lineNum, char *line, char *label, list_t *symbolsList, list_t *dataList){
     int i, j;
 
@@ -309,6 +382,16 @@ RESULT handleStringInstruction(const char *fileName, long lineNum, char *line, c
     return SUCCESS;
 }
 
+/* a function to handle a line of command (action).
+ * the function processes the parsed line and adds words accordingly.
+ * the function returns ERROR if there was any error and SUCCESS otherwise.
+ * param fileName - the name of the file that is being currently parsed.
+ * param lineNum - the line number that is currently being parsed.
+ * param command - the command parsed from the line.
+ * param line - the rest of the line after the command
+ * param label - the label of the line if exist
+ * param symbolsList - a pointer to the symbols list
+ * param wordList - a pointer to the word list */
 RESULT handleCommand(const char *fileName, long lineNum, char *command, char *line, char *label, list_t *symbolsList, list_t *wordList){
     char * token;
     char * origOper;
@@ -397,7 +480,11 @@ RESULT handleCommand(const char *fileName, long lineNum, char *command, char *li
     return SUCCESS;
 }
 
-
+/* function to append the extra words to the list when needed.
+ * param lineNum - the line number that is currently being parsed.
+ * param addressingType - the addressing type of the operand
+ * param oper - the operand that need to be added as a word to the list.
+ * param wordList - a pointer to the word list */
 void appendWord(long lineNum, ADDRESSING_TYPE addressingType, const char *oper, list_t *wordList){
     word_t *word = malloc(sizeof(word_t));
     if(word == NULL)
@@ -427,18 +514,29 @@ void appendWord(long lineNum, ADDRESSING_TYPE addressingType, const char *oper, 
 }
 
 
-char *strtok_r (char *s, const char *delim, char **save_ptr){
+/* function to cut a string by a delimiter.
+ * the function ignores the delimiter if its at the start of s.
+ * the function then finds the next delimiter in s and cut the string there to 2 parts by replacing the delimiter with a null terminator.
+ * then updates the save_ptr to the start of the second part of the cutted string.
+ * the function returns a pointer to the first part of the cutted string.
+ * param s - a pointer to the string to be splitted.
+ * param delim - the delimiter that the string should be cutted by.
+ * param save_ptr - a pointer to save the start of the second part of the cutted string. */
+char *strtok_r(char *s, const char *delim, char **save_ptr){
     char *end;
 
-    if (s == NULL)
+    if (s == NULL){
+        if (*save_ptr == NULL) /*entered NULL or reached the end of the string*/
+            return NULL;
         s = *save_ptr;
+    }
 
     if (*s == '\0'){
         *save_ptr = s;
         return NULL;
     }
 
-    /* Scan leading delimiters.  */
+    /* Scan leading delimiters and ignores them  */
     s += strspn (s, delim);
     if (*s == '\0'){
         *save_ptr = s;
@@ -449,11 +547,11 @@ char *strtok_r (char *s, const char *delim, char **save_ptr){
     end = s + strcspn (s, delim);
 
     if (*end == '\0'){
-        *save_ptr = end;
+        *save_ptr = NULL;
         return s;
     }
 
-    /* Terminate the token and make *SAVE_PTR point past it.  */
+    /* replace the delimiter with a null terminator and make *SAVE_PTR point past it.  */
     *end = '\0';
     *save_ptr = end + 1;
     return s;
