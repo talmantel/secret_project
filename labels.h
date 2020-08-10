@@ -7,4 +7,4 @@
 
 RESULT checkIfLegalLabel(const char *fileName, long lineNum, const char *label);
 
-#endif //MMN14_LABELS_H
+#endif

@@ -12,22 +12,22 @@ RESULT checkOperand(const char *fileName, long lineNum, instruction_t *instructi
                     allowedAdd_t allowedAddressing, OPERAND_SLOT operandSlot);
 
 action_t actions[NUM_OF_ACTIONS] = {
-        "mov", 0, 0, {.addressing = {1,1,0,1}}, {.addressing = {0, 1, 0, 1}},
-        "cmp", 1, 0, {.addressing = {1,1,0,1}}, {.addressing = {1, 1, 0, 1}},
-        "add", 2, 1, {.addressing = {1,1,0,1}}, {.addressing = {0, 1, 0, 1}},
-        "sub", 2, 2, {.addressing = {1,1,0,1}}, {.addressing = {0, 1, 0, 1}},
-        "lea", 4, 0, {.addressing = {0,1,0,0}}, {.addressing = {0, 1, 0, 1}},
-        "clr", 5, 1, {.hasParam = 0}, {.addressing = {0, 1, 0, 1}},
-        "not", 5, 2, {.hasParam = 0}, {.addressing = {0, 1, 0, 1}},
-        "inc", 5, 3, {.hasParam = 0}, {.addressing = {0, 1, 0, 1}},
-        "dec", 5, 4, {.hasParam = 0}, {.addressing = {0, 1, 0, 1}},
-        "jmp", 9, 1, {.hasParam = 0}, {.addressing = {0, 1, 1, 0}},
-        "bne", 9, 2, {.hasParam = 0}, {.addressing = {0, 1, 1, 0}},
-        "jsr", 9, 3, {.hasParam = 0}, {.addressing = {0, 1, 1, 0}},
-        "red", 12, 0, {.hasParam = 0}, {.addressing = {0, 1, 0, 1}},
-        "prn", 13, 0, {.hasParam = 0}, {.addressing = {1, 1, 0, 1}},
-        "rts", 14, 0, {.hasParam = 0}, {.hasParam = 0},
-        "stop", 15, 0, {.hasParam = 0}, {.hasParam = 0}
+        {"mov",   0, 0, {{1, 1, 0, 1}}, {{0, 1, 0, 1}}},
+        {"cmp",   1, 0, {{1, 1, 0, 1}}, {{1, 1, 0, 1}}},
+        {"add",   2, 1, {{1, 1, 0, 1}}, {{0, 1, 0, 1}}},
+        {"sub",   2, 2, {{1, 1, 0, 1}}, {{0, 1, 0, 1}}},
+        {"lea",   4, 0, {{0, 1, 0, 0}}, {{0, 1, 0, 1}}},
+        {"clr",   5, 1, {{0, 0, 0, 0}}, {{0, 1, 0, 1}}},
+        {"not",   5, 2, {{0, 0, 0, 0}}, {{0, 1, 0, 1}}},
+        {"inc",   5, 3, {{0, 0, 0, 0}}, {{0, 1, 0, 1}}},
+        {"dec",   5, 4, {{0, 0, 0, 0}}, {{0, 1, 0, 1}}},
+        {"jmp",   9, 1, {{0, 0, 0, 0}}, {{0, 1, 1, 0}}},
+        {"bne",   9, 2, {{0, 0, 0, 0}}, {{0, 1, 1, 0}}},
+        {"jsr",   9, 3, {{0, 0, 0, 0}}, {{0, 1, 1, 0}}},
+        {"red",  12, 0, {{0, 0, 0, 0}}, {{0, 1, 0, 1}}},
+        {"prn",  13, 0, {{0, 0, 0, 0}}, {{1, 1, 0, 1}}},
+        {"rts",  14, 0, {{0, 0, 0, 0}}, {{0, 0, 0, 0}}},
+        {"stop", 15, 0, {{0, 0, 0, 0}}, {{0, 0, 0, 0}}}
 };
 
 /*checking the command inserted and setting the opcode and funct
@@ -35,8 +35,8 @@ action_t actions[NUM_OF_ACTIONS] = {
  * otherwise continue checking the operands inserted */
 RESULT setCommandParameters(const char *fileName, long lineNum, char *command, char *origOper, char *destOper,
                             instruction_t *instruction) {
-    instruction->are_type = A;
     int i;
+    instruction->are_type = A;
     for(i = 0; i < NUM_OF_ACTIONS; i++){
         if(strcmp(actions[i].name, command) == 0){
             instruction->funct = actions[i].funct;
@@ -67,10 +67,10 @@ RESULT checkOperands(const char *fileName, long lineNum, instruction_t *instruct
     }
 
     if ((!action->origParam.hasParam && origOper != NULL) || (!action->destParam.hasParam && destOper != NULL)) {
-        if (action->origParam.hasParam)
-            printError(fileName, lineNum, "too many operands. Command requires no operands!\n", NULL);
-        else
+        if (action->destParam.hasParam)
             printError(fileName, lineNum, "too many operands. Command requires one operand!\n", NULL);
+        else
+            printError(fileName, lineNum, "too many operands. Command requires no operands!\n", NULL);
         return ERROR;
     }
 

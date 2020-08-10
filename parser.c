@@ -353,8 +353,7 @@ RESULT handleCommand(const char *fileName, long lineNum, char *command, char *li
                 return ERROR;
             }
 
-            destOper = strtok_r(token, " ",
-                                &token); /*cleaning tailing spaces and checking if there was space in the middle*/
+            destOper = strtok_r(token, " ", &token); /*cleaning tailing spaces and checking if there was space in the middle*/
             if (token && strlen(token) > 0) {  /*there was a space in the middle*/
                 printError(fileName, lineNum, "extra text '%s' after instruction!\n", token);
                 return ERROR;

@@ -33,4 +33,4 @@ typedef enum {ORIGIN, DESTINATION} OPERAND_SLOT;
 RESULT setCommandParameters(const char *fileName, long lineNum, char *command, char *origOper, char *destOper,
                             instruction_t *instruction);
 
-#endif //MMN14_ACTIONS_H
+#endif

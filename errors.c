@@ -4,7 +4,7 @@
 #include "errors.h"
 
 void handleMallocError() {
-    fprintf(stderr, "FATAL ERROR: Out of memory\n");
+    fprintf(ERROR_OUTPUT_FILE, "FATAL ERROR: Out of memory\n");
     exit(1);
 }
 
@@ -32,15 +32,15 @@ void printError(const char *fileName, long lineNum, const char *format, const vo
 
     if(lineNum == -1) {
         if (value == NULL)
-            fprintf(stderr, errorFormat, fileName);
+            fprintf(ERROR_OUTPUT_FILE, errorFormat, fileName);
         else
-            fprintf(stderr, errorFormat, fileName, value);
+            fprintf(ERROR_OUTPUT_FILE, errorFormat, fileName, value);
     }
     else{
         if (value == NULL)
-            fprintf(stderr, errorFormat, fileName, lineNum);
+            fprintf(ERROR_OUTPUT_FILE, errorFormat, fileName, lineNum);
         else
-            fprintf(stderr, errorFormat, fileName, lineNum, value);
+            fprintf(ERROR_OUTPUT_FILE, errorFormat, fileName, lineNum, value);
     }
     free(errorFormat);
 }

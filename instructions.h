@@ -1,7 +1,3 @@
-//
-// Created by tal on 6/26/2020.
-//
-
 #ifndef MMN14_INSTRUCTIONS_H
 #define MMN14_INSTRUCTIONS_H
 
@@ -13,15 +9,15 @@ typedef struct{
     unsigned int are_type: 3;
     unsigned int funct: 5;
     unsigned int dest_reg: 3;
-    ADDRESSING_TYPE dest_addressing: 2;
+    ADDRESSING_TYPE dest_addressing;
     unsigned int origin_reg: 3;
-    ADDRESSING_TYPE origin_addressing: 2;
+    ADDRESSING_TYPE origin_addressing;
     unsigned int opcode: 6;
 } instruction_t;
 
 typedef struct{
     unsigned int are_type: 3;
-    unsigned long address: 21;
+    unsigned long address;
 } address_t;
 
 typedef struct {
@@ -44,4 +40,4 @@ void freeInstructionContent(instruction_t *content);
 void freeLabelContent(label_t *content);
 void freeAddressContent(address_t *content);
 
-#endif //MMN14_INSTRUCTIONS_H
+#endif

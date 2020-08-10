@@ -1,0 +1,340 @@
+Error in file: 'first_pass_errors':2 - Line longer than maximum length 80!
+Error in file: 'first_pass_errors':5 - Label '01234567890123456789012345678901' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':9 - label 'CODELABEL' is already defined and cannot be redefined!
+Error in file: 'first_pass_errors':13 - label 'CODELABEL2' is already defined and cannot be redefined!
+Error in file: 'first_pass_errors':17 - label 'CODELABEL3' is already defined and cannot be redefined as external!
+Error in file: 'first_pass_errors':21 - label 'CODELABEL4' is already defined and cannot be redefined!
+Error in file: 'first_pass_errors':25 - label 'CODELABEL5' is already defined and cannot be redefined!
+Error in file: 'first_pass_errors':29 - label 'CODELABEL6' is already defined and cannot be redefined as external!
+Error in file: 'first_pass_errors':32 - Empty label!
+Error in file: 'first_pass_errors':33 - Empty label!
+Error in file: 'first_pass_errors':36 - Label '0label' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':37 - Label '012' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':38 - Label '0' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':41 - Label 'some,label' contains non-alphanumeric characters!
+Error in file: 'first_pass_errors':42 - Line longer than maximum length 80!
+Error in file: 'first_pass_errors':45 - Illegal comma!
+Error in file: 'first_pass_errors':48 - multiple consecutive commas!
+Error in file: 'first_pass_errors':51 - Missing comma at '2'!
+Error in file: 'first_pass_errors':54 - Missing operand!
+Error in file: 'first_pass_errors':55 - Missing comma at 'extra text'!
+Error in file: 'first_pass_errors':56 - no end quotes
+Error in file: 'first_pass_errors':57 - extra text 'extra' after instruction!
+Error in file: 'first_pass_errors':58 - extra text 'extra' after instruction!
+Error in file: 'first_pass_errors':61 - argument '1a2' is not a number!
+Error in file: 'first_pass_errors':62 - argument '1-2' is not a number!
+Error in file: 'first_pass_errors':63 - argument '12a' is not a number!
+Error in file: 'first_pass_errors':64 - argument 'a' is not a number!
+Error in file: 'first_pass_errors':65 - argument '1a' is not a number!
+Error in file: 'first_pass_errors':66 - argument 'a2' is not a number!
+Error in file: 'first_pass_errors':70 - missing start quotes before 'sadfsa'!
+Error in file: 'first_pass_errors':73 - no end quotes
+Error in file: 'first_pass_errors':76 - missing start quotes before 'sdafsdf"'!
+Error in file: 'first_pass_errors':79 - non printable character '�' in string argument!
+Error in file: 'first_pass_errors':83 - instruction missing argument!
+Error in file: 'first_pass_errors':84 - instruction missing argument!
+Error in file: 'first_pass_errors':85 - instruction missing argument!
+Error in file: 'first_pass_errors':86 - instruction missing argument!
+Error in file: 'first_pass_errors':87 - Line longer than maximum length 80!
+Error in file: 'first_pass_errors':90 - command '01234567890123456789012345678901234567890123456789012345678901234567890123456789' does not exist!
+Error in file: 'first_pass_errors':91 - Missing comma at 'mov r0'!
+Error in file: 'first_pass_errors':92 - command 'somelabel:mov' does not exist!
+Error in file: 'first_pass_errors':93 - command 'com' does not exist!
+Error in file: 'first_pass_errors':94 - command 'com' does not exist!
+Error in file: 'first_pass_errors':95 - command 'jmpr,' does not exist!
+Error in file: 'first_pass_errors':96 - command 'command:' does not exist!
+Error in file: 'first_pass_errors':97 - instruction '.someinstruct' does not exist!
+Error in file: 'first_pass_errors':100 - missing operand\s. Command requires two operands!
+Error in file: 'first_pass_errors':101 - missing operand\s. Command requires two operands!
+Error in file: 'first_pass_errors':102 - missing operand\s. Command requires two operands!
+Error in file: 'first_pass_errors':103 - missing operand\s. Command requires two operands!
+Error in file: 'first_pass_errors':104 - missing operand\s. Command requires two operands!
+Error in file: 'first_pass_errors':105 - missing operand\s. Command requires two operands!
+Error in file: 'first_pass_errors':106 - missing operand\s. Command requires two operands!
+Error in file: 'first_pass_errors':107 - missing operand\s. Command requires two operands!
+Error in file: 'first_pass_errors':108 - missing operand\s. Command requires two operands!
+Error in file: 'first_pass_errors':109 - missing operand\s. Command requires two operands!
+Error in file: 'first_pass_errors':112 - too many operands. the maximum number is two!
+Error in file: 'first_pass_errors':113 - too many operands. the maximum number is two!
+Error in file: 'first_pass_errors':114 - too many operands. the maximum number is two!
+Error in file: 'first_pass_errors':115 - too many operands. the maximum number is two!
+Error in file: 'first_pass_errors':116 - too many operands. the maximum number is two!
+Error in file: 'first_pass_errors':117 - too many operands. the maximum number is two!
+Error in file: 'first_pass_errors':118 - too many operands. the maximum number is two!
+Error in file: 'first_pass_errors':119 - too many operands. the maximum number is two!
+Error in file: 'first_pass_errors':120 - too many operands. the maximum number is two!
+Error in file: 'first_pass_errors':121 - too many operands. the maximum number is two!
+Error in file: 'first_pass_errors':124 - missing operand\s. Command requires one operand!
+Error in file: 'first_pass_errors':125 - missing operand\s. Command requires one operand!
+Error in file: 'first_pass_errors':126 - missing operand\s. Command requires one operand!
+Error in file: 'first_pass_errors':127 - missing operand\s. Command requires one operand!
+Error in file: 'first_pass_errors':128 - missing operand\s. Command requires one operand!
+Error in file: 'first_pass_errors':129 - missing operand\s. Command requires one operand!
+Error in file: 'first_pass_errors':130 - missing operand\s. Command requires one operand!
+Error in file: 'first_pass_errors':131 - missing operand\s. Command requires one operand!
+Error in file: 'first_pass_errors':132 - missing operand\s. Command requires one operand!
+Error in file: 'first_pass_errors':135 - too many operands. Command requires one operand!
+Error in file: 'first_pass_errors':136 - too many operands. Command requires one operand!
+Error in file: 'first_pass_errors':137 - too many operands. Command requires one operand!
+Error in file: 'first_pass_errors':138 - too many operands. Command requires one operand!
+Error in file: 'first_pass_errors':139 - too many operands. Command requires one operand!
+Error in file: 'first_pass_errors':140 - too many operands. Command requires one operand!
+Error in file: 'first_pass_errors':141 - too many operands. Command requires one operand!
+Error in file: 'first_pass_errors':142 - too many operands. Command requires one operand!
+Error in file: 'first_pass_errors':143 - too many operands. Command requires one operand!
+Error in file: 'first_pass_errors':144 - too many operands. the maximum number is two!
+Error in file: 'first_pass_errors':145 - too many operands. the maximum number is two!
+Error in file: 'first_pass_errors':146 - too many operands. the maximum number is two!
+Error in file: 'first_pass_errors':147 - too many operands. the maximum number is two!
+Error in file: 'first_pass_errors':148 - too many operands. the maximum number is two!
+Error in file: 'first_pass_errors':149 - too many operands. the maximum number is two!
+Error in file: 'first_pass_errors':150 - too many operands. the maximum number is two!
+Error in file: 'first_pass_errors':151 - too many operands. the maximum number is two!
+Error in file: 'first_pass_errors':152 - too many operands. the maximum number is two!
+Error in file: 'first_pass_errors':156 - too many operands. Command requires no operands!
+Error in file: 'first_pass_errors':157 - too many operands. Command requires no operands!
+Error in file: 'first_pass_errors':158 - too many operands. Command requires no operands!
+Error in file: 'first_pass_errors':159 - too many operands. Command requires no operands!
+Error in file: 'first_pass_errors':163 - wrong addressing type for operand '&lb1'!
+Error in file: 'first_pass_errors':164 - wrong addressing type for operand '&lb1'!
+Error in file: 'first_pass_errors':165 - wrong addressing type for operand '&lb2'!
+Error in file: 'first_pass_errors':166 - wrong addressing type for operand '&lb1'!
+Error in file: 'first_pass_errors':167 - wrong addressing type for operand '#2'!
+Error in file: 'first_pass_errors':168 - wrong addressing type for operand '#2'!
+Error in file: 'first_pass_errors':169 - wrong addressing type for operand '&lb1'!
+Error in file: 'first_pass_errors':170 - wrong addressing type for operand '&lb1'!
+Error in file: 'first_pass_errors':171 - wrong addressing type for operand '&lb2'!
+Error in file: 'first_pass_errors':172 - wrong addressing type for operand '&lb1'!
+Error in file: 'first_pass_errors':173 - wrong addressing type for operand '&lb1'!
+Error in file: 'first_pass_errors':174 - wrong addressing type for operand '&lb2'!
+Error in file: 'first_pass_errors':175 - wrong addressing type for operand '&lb1'!
+Error in file: 'first_pass_errors':176 - wrong addressing type for operand '#2'!
+Error in file: 'first_pass_errors':177 - wrong addressing type for operand '#2'!
+Error in file: 'first_pass_errors':178 - wrong addressing type for operand '&lb1'!
+Error in file: 'first_pass_errors':179 - wrong addressing type for operand '&lb1'!
+Error in file: 'first_pass_errors':180 - wrong addressing type for operand '&lb2'!
+Error in file: 'first_pass_errors':181 - wrong addressing type for operand '&lb1'!
+Error in file: 'first_pass_errors':182 - wrong addressing type for operand '#20'!
+Error in file: 'first_pass_errors':183 - wrong addressing type for operand '#20'!
+Error in file: 'first_pass_errors':184 - wrong addressing type for operand '&lb1'!
+Error in file: 'first_pass_errors':185 - wrong addressing type for operand '&lb1'!
+Error in file: 'first_pass_errors':186 - wrong addressing type for operand '&lb2'!
+Error in file: 'first_pass_errors':187 - wrong addressing type for operand '&lb1'!
+Error in file: 'first_pass_errors':188 - wrong addressing type for operand '#2'!
+Error in file: 'first_pass_errors':189 - wrong addressing type for operand '#-4'!
+Error in file: 'first_pass_errors':190 - wrong addressing type for operand '#-4'!
+Error in file: 'first_pass_errors':191 - wrong addressing type for operand 'r0'!
+Error in file: 'first_pass_errors':192 - wrong addressing type for operand 'r0'!
+Error in file: 'first_pass_errors':193 - wrong addressing type for operand '&lb1'!
+Error in file: 'first_pass_errors':194 - wrong addressing type for operand '&lb1'!
+Error in file: 'first_pass_errors':195 - wrong addressing type for operand '&lb1'!
+Error in file: 'first_pass_errors':196 - wrong addressing type for operand '&lb1'!
+Error in file: 'first_pass_errors':197 - wrong addressing type for operand '&lb1'!
+Error in file: 'first_pass_errors':198 - wrong addressing type for operand '#9'!
+Error in file: 'first_pass_errors':199 - wrong addressing type for operand '#9'!
+Error in file: 'first_pass_errors':200 - wrong addressing type for operand '#9'!
+Error in file: 'first_pass_errors':201 - wrong addressing type for operand '#9'!
+Error in file: 'first_pass_errors':202 - wrong addressing type for operand '#9'!
+Error in file: 'first_pass_errors':203 - wrong addressing type for operand 'r0'!
+Error in file: 'first_pass_errors':204 - wrong addressing type for operand 'r0'!
+Error in file: 'first_pass_errors':205 - wrong addressing type for operand 'r0'!
+Error in file: 'first_pass_errors':206 - wrong addressing type for operand '#-9'!
+Error in file: 'first_pass_errors':207 - wrong addressing type for operand '#-9'!
+Error in file: 'first_pass_errors':208 - wrong addressing type for operand '#-9'!
+Error in file: 'first_pass_errors':209 - wrong addressing type for operand '&lb1'!
+Error in file: 'first_pass_errors':210 - wrong addressing type for operand '&r0'!
+Error in file: 'first_pass_errors':213 - Label without command or instruction!
+Error in file: 'first_pass_errors':214 - Label without command or instruction!
+Error in file: 'first_pass_errors':217 - Label 'mov' is reserved!
+Error in file: 'first_pass_errors':218 - Label 'cmp' is reserved!
+Error in file: 'first_pass_errors':219 - Label 'add' is reserved!
+Error in file: 'first_pass_errors':220 - Label 'sub' is reserved!
+Error in file: 'first_pass_errors':221 - Label 'lea' is reserved!
+Error in file: 'first_pass_errors':222 - Label 'clr' is reserved!
+Error in file: 'first_pass_errors':223 - Label 'not' is reserved!
+Error in file: 'first_pass_errors':224 - Label 'inc' is reserved!
+Error in file: 'first_pass_errors':225 - Label 'dec' is reserved!
+Error in file: 'first_pass_errors':226 - Label 'jmp' is reserved!
+Error in file: 'first_pass_errors':227 - Label 'bne' is reserved!
+Error in file: 'first_pass_errors':228 - Label 'jsr' is reserved!
+Error in file: 'first_pass_errors':229 - Label 'red' is reserved!
+Error in file: 'first_pass_errors':230 - Label 'prn' is reserved!
+Error in file: 'first_pass_errors':231 - Label 'rts' is reserved!
+Error in file: 'first_pass_errors':232 - Label 'stop' is reserved!
+Error in file: 'first_pass_errors':233 - Label 'r0' is reserved!
+Error in file: 'first_pass_errors':234 - Label 'r1' is reserved!
+Error in file: 'first_pass_errors':235 - Label 'r2' is reserved!
+Error in file: 'first_pass_errors':236 - Label 'r3' is reserved!
+Error in file: 'first_pass_errors':237 - Label 'r4' is reserved!
+Error in file: 'first_pass_errors':238 - Label 'r5' is reserved!
+Error in file: 'first_pass_errors':239 - Label 'r6' is reserved!
+Error in file: 'first_pass_errors':240 - Label 'r7' is reserved!
+Error in file: 'first_pass_errors':243 - Label 'mov' is reserved!
+Error in file: 'first_pass_errors':244 - Label 'cmp' is reserved!
+Error in file: 'first_pass_errors':245 - Label 'add' is reserved!
+Error in file: 'first_pass_errors':246 - Label 'sub' is reserved!
+Error in file: 'first_pass_errors':247 - Label 'lea' is reserved!
+Error in file: 'first_pass_errors':248 - Label 'clr' is reserved!
+Error in file: 'first_pass_errors':249 - Label 'not' is reserved!
+Error in file: 'first_pass_errors':250 - Label 'inc' is reserved!
+Error in file: 'first_pass_errors':251 - Label 'dec' is reserved!
+Error in file: 'first_pass_errors':252 - Label 'jmp' is reserved!
+Error in file: 'first_pass_errors':253 - Label 'bne' is reserved!
+Error in file: 'first_pass_errors':254 - Label 'jsr' is reserved!
+Error in file: 'first_pass_errors':255 - Label 'red' is reserved!
+Error in file: 'first_pass_errors':256 - Label 'prn' is reserved!
+Error in file: 'first_pass_errors':257 - Label 'rts' is reserved!
+Error in file: 'first_pass_errors':258 - Label 'stop' is reserved!
+Error in file: 'first_pass_errors':259 - Label 'mov' is reserved!
+Error in file: 'first_pass_errors':260 - Label 'cmp' is reserved!
+Error in file: 'first_pass_errors':261 - Label 'add' is reserved!
+Error in file: 'first_pass_errors':262 - Label 'sub' is reserved!
+Error in file: 'first_pass_errors':263 - Label 'lea' is reserved!
+Error in file: 'first_pass_errors':264 - Label 'clr' is reserved!
+Error in file: 'first_pass_errors':265 - Label 'not' is reserved!
+Error in file: 'first_pass_errors':266 - Label 'inc' is reserved!
+Error in file: 'first_pass_errors':267 - Label 'dec' is reserved!
+Error in file: 'first_pass_errors':268 - Label 'jmp' is reserved!
+Error in file: 'first_pass_errors':269 - Label 'bne' is reserved!
+Error in file: 'first_pass_errors':270 - Label 'jsr' is reserved!
+Error in file: 'first_pass_errors':271 - Label 'red' is reserved!
+Error in file: 'first_pass_errors':272 - Label 'prn' is reserved!
+Error in file: 'first_pass_errors':273 - Label 'rts' is reserved!
+Error in file: 'first_pass_errors':274 - Label 'stop' is reserved!
+Error in file: 'first_pass_errors':275 - Label 'r0' is reserved!
+Error in file: 'first_pass_errors':276 - Label 'r1' is reserved!
+Error in file: 'first_pass_errors':277 - Label 'r2' is reserved!
+Error in file: 'first_pass_errors':278 - Label 'r3' is reserved!
+Error in file: 'first_pass_errors':279 - Label 'r4' is reserved!
+Error in file: 'first_pass_errors':280 - Label 'r5' is reserved!
+Error in file: 'first_pass_errors':281 - Label 'r6' is reserved!
+Error in file: 'first_pass_errors':282 - Label 'r7' is reserved!
+Error in file: 'first_pass_errors':283 - Label 'mov' is reserved!
+Error in file: 'first_pass_errors':284 - Label 'cmp' is reserved!
+Error in file: 'first_pass_errors':285 - Label 'add' is reserved!
+Error in file: 'first_pass_errors':286 - Label 'sub' is reserved!
+Error in file: 'first_pass_errors':287 - Label 'lea' is reserved!
+Error in file: 'first_pass_errors':288 - Label 'clr' is reserved!
+Error in file: 'first_pass_errors':289 - Label 'not' is reserved!
+Error in file: 'first_pass_errors':290 - Label 'inc' is reserved!
+Error in file: 'first_pass_errors':291 - Label 'dec' is reserved!
+Error in file: 'first_pass_errors':292 - Label 'jmp' is reserved!
+Error in file: 'first_pass_errors':293 - Label 'bne' is reserved!
+Error in file: 'first_pass_errors':294 - Label 'jsr' is reserved!
+Error in file: 'first_pass_errors':295 - Label 'red' is reserved!
+Error in file: 'first_pass_errors':296 - Label 'prn' is reserved!
+Error in file: 'first_pass_errors':297 - Label 'rts' is reserved!
+Error in file: 'first_pass_errors':298 - Label 'stop' is reserved!
+Error in file: 'first_pass_errors':299 - Label 'mov' is reserved!
+Error in file: 'first_pass_errors':300 - Label 'cmp' is reserved!
+Error in file: 'first_pass_errors':301 - Label 'add' is reserved!
+Error in file: 'first_pass_errors':302 - Label 'sub' is reserved!
+Error in file: 'first_pass_errors':303 - Label 'lea' is reserved!
+Error in file: 'first_pass_errors':304 - Label 'clr' is reserved!
+Error in file: 'first_pass_errors':305 - Label 'not' is reserved!
+Error in file: 'first_pass_errors':306 - Label 'inc' is reserved!
+Error in file: 'first_pass_errors':307 - Label 'dec' is reserved!
+Error in file: 'first_pass_errors':308 - Label 'jmp' is reserved!
+Error in file: 'first_pass_errors':309 - Label 'bne' is reserved!
+Error in file: 'first_pass_errors':310 - Label 'jsr' is reserved!
+Error in file: 'first_pass_errors':311 - Label 'red' is reserved!
+Error in file: 'first_pass_errors':312 - Label 'prn' is reserved!
+Error in file: 'first_pass_errors':313 - Label 'rts' is reserved!
+Error in file: 'first_pass_errors':314 - Label 'stop' is reserved!
+Error in file: 'first_pass_errors':315 - Label 'mov' is reserved!
+Error in file: 'first_pass_errors':316 - Label 'cmp' is reserved!
+Error in file: 'first_pass_errors':317 - Label 'add' is reserved!
+Error in file: 'first_pass_errors':318 - Label 'sub' is reserved!
+Error in file: 'first_pass_errors':319 - Label 'lea' is reserved!
+Error in file: 'first_pass_errors':320 - Label 'clr' is reserved!
+Error in file: 'first_pass_errors':321 - Label 'not' is reserved!
+Error in file: 'first_pass_errors':322 - Label 'inc' is reserved!
+Error in file: 'first_pass_errors':323 - Label 'dec' is reserved!
+Error in file: 'first_pass_errors':324 - Label 'jmp' is reserved!
+Error in file: 'first_pass_errors':325 - Label 'bne' is reserved!
+Error in file: 'first_pass_errors':326 - Label 'jsr' is reserved!
+Error in file: 'first_pass_errors':327 - Label 'red' is reserved!
+Error in file: 'first_pass_errors':328 - Label 'prn' is reserved!
+Error in file: 'first_pass_errors':329 - Label 'rts' is reserved!
+Error in file: 'first_pass_errors':330 - Label 'stop' is reserved!
+Error in file: 'first_pass_errors':331 - Label 'r0' is reserved!
+Error in file: 'first_pass_errors':332 - Label 'r1' is reserved!
+Error in file: 'first_pass_errors':333 - Label 'r2' is reserved!
+Error in file: 'first_pass_errors':334 - Label 'r3' is reserved!
+Error in file: 'first_pass_errors':335 - Label 'r4' is reserved!
+Error in file: 'first_pass_errors':336 - Label 'r5' is reserved!
+Error in file: 'first_pass_errors':337 - Label 'r6' is reserved!
+Error in file: 'first_pass_errors':338 - Label 'r7' is reserved!
+Error in file: 'first_pass_errors':339 - Label 'mov' is reserved!
+Error in file: 'first_pass_errors':340 - Label 'cmp' is reserved!
+Error in file: 'first_pass_errors':341 - Label 'add' is reserved!
+Error in file: 'first_pass_errors':342 - Label 'sub' is reserved!
+Error in file: 'first_pass_errors':343 - Label 'lea' is reserved!
+Error in file: 'first_pass_errors':344 - Label 'clr' is reserved!
+Error in file: 'first_pass_errors':345 - Label 'not' is reserved!
+Error in file: 'first_pass_errors':346 - Label 'inc' is reserved!
+Error in file: 'first_pass_errors':347 - Label 'dec' is reserved!
+Error in file: 'first_pass_errors':348 - Label 'jmp' is reserved!
+Error in file: 'first_pass_errors':349 - Label 'bne' is reserved!
+Error in file: 'first_pass_errors':350 - Label 'jsr' is reserved!
+Error in file: 'first_pass_errors':351 - Label 'red' is reserved!
+Error in file: 'first_pass_errors':352 - Label 'prn' is reserved!
+Error in file: 'first_pass_errors':353 - Label 'rts' is reserved!
+Error in file: 'first_pass_errors':354 - Label 'stop' is reserved!
+Error in file: 'first_pass_errors':355 - Label 'r0' is reserved!
+Error in file: 'first_pass_errors':356 - Label 'r1' is reserved!
+Error in file: 'first_pass_errors':357 - Label 'r2' is reserved!
+Error in file: 'first_pass_errors':358 - Label 'r3' is reserved!
+Error in file: 'first_pass_errors':359 - Label 'r4' is reserved!
+Error in file: 'first_pass_errors':360 - Label 'r5' is reserved!
+Error in file: 'first_pass_errors':361 - Label 'r6' is reserved!
+Error in file: 'first_pass_errors':362 - Label 'r7' is reserved!
+Error in file: 'first_pass_errors':366 - Label '1d' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':367 - Label '1d' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':368 - Label '1d' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':369 - Label '1d' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':370 - Label '1d' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':371 - Label '1d' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':372 - Label '1d' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':373 - Label '1d' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':374 - Label '1d' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':375 - Label '1d' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':376 - Label '1s' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':377 - Label '1s' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':378 - Label '1s' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':379 - Label '1s' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':380 - Label '1s' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':381 - Label '1s' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':382 - Label '1s' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':383 - Label '1s' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':384 - Label '1s' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':385 - Label '1s' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':386 - Label '1s' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':387 - Label '&r0' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':388 - Label '&r1' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':389 - Label '.label' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':390 - Label '.label' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':391 - Label '.label' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':392 - Label '.label' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':393 - Label '.label' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':396 - Label 'labe&l' contains non-alphanumeric characters!
+Error in file: 'first_pass_errors':397 - Label 'labe&l' contains non-alphanumeric characters!
+Error in file: 'first_pass_errors':398 - Label 'somel&abel' contains non-alphanumeric characters!
+Error in file: 'first_pass_errors':399 - Label 'labe&l' contains non-alphanumeric characters!
+Error in file: 'first_pass_errors':400 - Label 'labe&l' contains non-alphanumeric characters!
+Error in file: 'first_pass_errors':404 - Label '#label' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':405 - Label '#label' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':406 - Label '&label' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':407 - Label '&label' begins with non-alphabetic character!
+Error in file: 'first_pass_errors':410 - Label 'l1234567890123456789012345678901' is too long!
+Error in file: 'first_pass_errors':411 - Label 'l1234567890123456789012345678901' is too long!
+Error in file: 'first_pass_errors':412 - Label 'l1234567890123456789012345678901' is too long!
+Error in file: 'first_pass_errors':415 - multiple consecutive commas!
+Error in file: 'first_pass_errors':416 - multiple consecutive commas!
+Error in file: 'first_pass_errors':417 - multiple consecutive commas!
+Error in file: 'first_pass_errors':420 - extra text 'extra text' after instruction!
+Error in file: 'first_pass_errors':421 - too many operands. the maximum number is two!
+Error in file: 'first_pass_errors':422 - too many operands. the maximum number is two!
+Error in file: 'first_pass_errors':423 - too many operands. the maximum number is two!
+Error in file: 'first_pass_errors':424 - too many operands. the maximum number is two!
+Error in file: 'first_pass_errors':425 - too many operands. the maximum number is two!

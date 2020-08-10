@@ -129,7 +129,7 @@ void writeMainOutput(FILE *outputFile, list_t *instructionsList, list_t *dataLis
     currentNode = dataList->head;
     while(currentNode != NULL){
         data = currentNode->content;
-        fprintf(outputFile, "%07lu %06lx\n", wordAddress, data->value);
+        fprintf(outputFile, "%07lu %06lx\n", wordAddress, data->value & 0xffffff);
         currentNode = currentNode->next;
         wordAddress++;
     }

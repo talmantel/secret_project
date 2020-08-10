@@ -1,7 +1,3 @@
-//
-// Created by tal on 6/26/2020.
-//
-
 #ifndef MMN14_SECOND_PASS_H
 #define MMN14_SECOND_PASS_H
 #include "definitions.h"
@@ -11,4 +7,4 @@ RESULT secondPass(const char *fileName, list_t *symbolsList, list_t *instruction
                   list_t *externalsList);
 
 
-#endif //MMN14_SECOND_PASS_H
+#endif

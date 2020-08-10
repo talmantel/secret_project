@@ -3,9 +3,9 @@
 
 typedef struct{
     char *name;
-    unsigned long address:21;
+    unsigned long address;
 } external_t;
 
 void freeExternalContent(external_t *content);
 
-#endif //MMN14_EXTERNALS_H
+#endif

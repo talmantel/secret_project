@@ -72,7 +72,7 @@ some,label: mov r0,r1
 ; no end quote
 .string "sdafsdf
 
-; no start quote /* works rename */
+; no start quote
 .string sdafsdf"
 
 ;illegal character in string
@@ -94,6 +94,7 @@ com r0
 com
 jmpr,
 label: command: r0
+.someinstruct label
 
 ; missing operands (needs 2)
 mov

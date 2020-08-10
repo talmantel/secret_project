@@ -18,5 +18,5 @@ typedef enum {
 
 
 
-#endif //MMN14_DEFINITIONS_H
+#endif
 

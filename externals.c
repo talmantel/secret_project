@@ -1,7 +1,3 @@
-//
-// Created by tal on 6/30/2020.
-//
-
 #include <stdlib.h>
 #include "externals.h"
 

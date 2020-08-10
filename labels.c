@@ -4,8 +4,8 @@
 #include "errors.h"
 
 char * reservedWords[] = {"mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec",
-                          "jmp", "bne", "jsr", "red", "prn", "rts", "stop", ".string", ".entry",
-                          ".data", ".extern", "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};
+                          "jmp", "bne", "jsr", "red", "prn", "rts", "stop", "string", "entry",
+                          "data", "extern", "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};
 
 int checkIfReservedWord(const char * word);
 
