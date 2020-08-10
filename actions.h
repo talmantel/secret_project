@@ -1,7 +1,7 @@
 #ifndef MMN14_ACTIONS_H
 #define MMN14_ACTIONS_H
 
-#include "instructions.h"
+#include "words.h"
 #include "definitions.h"
 
 /*number of actions exist and defined*/

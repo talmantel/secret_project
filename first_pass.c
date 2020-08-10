@@ -18,10 +18,10 @@ void correctSymbolsAddresses(list_t *symbolsList, int IC);
  * param fileName - the file name that is currently being parsed
  * param lineNum - the line number that is currently being parsed
  * param symbolsList - a pointer to symbols list
- * param instructionsList - a pointer to instruction list
+ * param wordList - a pointer to instruction list
  * param dataList - a pointer to data list
  * param entriesList - a pointer to entries list*/
-RESULT firstPass(const char *fileName, FILE *file, list_t *symbolsList, list_t *instructionsList, list_t *dataList,
+RESULT firstPass(const char *fileName, FILE *file, list_t *symbolsList, list_t *wordList, list_t *dataList,
                  list_t *entriesList) {
     char line[MAX_LINE_LENGTH+3];
     int lineNum = 1;
@@ -49,7 +49,7 @@ RESULT firstPass(const char *fileName, FILE *file, list_t *symbolsList, list_t *
             if(finishReadingLine(file) == EOF)
                 break;
         }
-        else if(parseLine(fileName, line, lineNum, symbolsList, instructionsList, dataList, entriesList) == ERROR){
+        else if(parseLine(fileName, line, lineNum, symbolsList, wordList, dataList, entriesList) == ERROR){
             /* error was printed in parseLine*/
             result = ERROR;
         }
@@ -57,7 +57,7 @@ RESULT firstPass(const char *fileName, FILE *file, list_t *symbolsList, list_t *
         lineNum++;
     }
 
-    correctSymbolsAddresses(symbolsList, instructionsList->length);
+    correctSymbolsAddresses(symbolsList, wordList->length);
 
     return result;
 }

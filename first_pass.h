@@ -3,7 +3,6 @@
 #include "definitions.h"
 #include "linked_list.h"
 
-RESULT firstPass(const char *fileName, FILE *file, list_t *symbolsList, list_t *instructionsList, list_t *dataList,
-                 list_t *entriesList);
+RESULT firstPass(const char *fileName, FILE *file, list_t *symbolsList, list_t *wordList, list_t *dataList, list_t *entriesList);
 
 #endif

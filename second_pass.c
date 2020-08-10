@@ -5,7 +5,7 @@
 #include "linked_list.h"
 #include "second_pass.h"
 #include "symbols.h"
-#include "instructions.h"
+#include "words.h"
 #include "entries.h"
 #include "extern.h"
 
@@ -18,11 +18,10 @@ RESULT addAddressToEntry(const char *fileName, list_t *symbolsList, entry_t *ent
  * returns ERROR if there was an error while parsing the file in the first pass, and SUCCESS otherwise
  * param fileName - the file name that is currently being parsed
  * param symbolsList - a pointer to symbols list
- * param instructionsList - a pointer to instruction list
+ * param wordList - a pointer to instruction list
  * param entriesList - a pointer to entries list
  * param externsList - a pointer to externs list*/
-RESULT secondPass(const char *fileName, list_t *symbolsList, list_t *instructionsList, list_t *entriesList,
-                  list_t *externsList) {
+RESULT secondPass(const char *fileName, list_t *symbolsList, list_t *wordList, list_t *entriesList, list_t *externsList) {
     RESULT result = SUCCESS;
     word_t *word;
     entry_t *entry;
@@ -35,7 +34,7 @@ RESULT secondPass(const char *fileName, list_t *symbolsList, list_t *instruction
     unsigned int currentInstructionAddress;
 
     /* replace labels in instructions with symbol addresses */
-    currentNode = instructionsList->head;
+    currentNode = wordList->head;
     while(currentNode != NULL){
         word = currentNode->content;
         switch (word->type) {
@@ -75,7 +74,7 @@ RESULT secondPass(const char *fileName, list_t *symbolsList, list_t *instruction
  * returns ERROR if there was any error and SUCCESS otherwise.
  * param fileName - the file name that is currently being parsed
  * param symbolsList - a pointer to symbols list
- * param entry - a pointer to the entry_t that the address should be  added to*/
+ * param entry - a pointer to the entry_t that the address should be added to*/
 RESULT addAddressToEntry(const char *fileName, list_t *symbolsList, entry_t *entry) {
     /* find symbol with the same name */
     symbol_t *symbol = search(symbolsList, (int (*)(void *, void *)) compareSymbol, entry->name);
@@ -110,11 +109,11 @@ RESULT replaceLabelWithAddress(const char *fileName, list_t *symbolsList, list_t
     extern_t *external;
 
     /* find symbol with the same name as the label*/
-    symbol_t *symbol = search(symbolsList, (int (*)(void *, void *)) compareSymbol, word->content.label->label);
+    symbol_t *symbol = search(symbolsList, (int (*)(void *, void *)) compareSymbol, word->content.label->labelName);
 
     if(symbol == NULL){
         printErrorWithLine(fileName, word->content.label->lineNumber, "'%s' is not defined\n",
-                           word->content.label->label);
+                           word->content.label->labelName);
         return ERROR;
     }
 
@@ -125,7 +124,7 @@ RESULT replaceLabelWithAddress(const char *fileName, list_t *symbolsList, list_t
     switch (word->content.label->addressing_type) {
         case ADDRESSING_TYPE_DIRECT:
             if(symbol->type == EXTERNAL){
-                address->address = 0;
+                address->addressValue = 0;
                 address->are_type = E;
 
                 /* add to list of externals */
@@ -141,7 +140,7 @@ RESULT replaceLabelWithAddress(const char *fileName, list_t *symbolsList, list_t
                 addNode(externsList, external);
             }
             else {
-                address->address = symbol->address;
+                address->addressValue = symbol->address;
                 address->are_type = R;
             }
             break;
@@ -149,12 +148,12 @@ RESULT replaceLabelWithAddress(const char *fileName, list_t *symbolsList, list_t
             if(symbol->type == EXTERNAL){
                 printErrorWithLine(fileName, word->content.label->lineNumber,
                                    "External label '%s' cannot be used as relative operand\n",
-                                   word->content.label->label);
+                                   word->content.label->labelName);
                 free(address);
                 return ERROR;
             }
 
-            address->address = symbol->address - instructionAddress;
+            address->addressValue = symbol->address - instructionAddress;
             address->are_type = A;
             break;
         default:

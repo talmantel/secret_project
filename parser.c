@@ -1,7 +1,7 @@
 #include "parser.h"
 #include "actions.h"
 #include "symbols.h"
-#include "instructions.h"
+#include "words.h"
 #include "data.h"
 #include "entries.h"
 #include "errors.h"
@@ -15,7 +15,7 @@ int addDataToList(list_t * dataList, int value);
 int addEntryToList(list_t *entriesList, char *name, long lineNum);
 int isOnlyWhiteSpaces(const char * text);
 RESULT handleLabel(const char *fileName, long lineNum, char *token, char **label);
-RESULT handleCommand(const char *fileName, long lineNum, char *command, char *line, char *label, list_t *symbolsList, list_t *instructionsList);
+RESULT handleCommand(const char *fileName, long lineNum, char *command, char *line, char *label, list_t *symbolsList, list_t *wordList);
 RESULT handleInstruction(const char *fileName, long lineNum, char *instruction, char *line, char *label, list_t *symbolsList, list_t *dataList, list_t *entriesList);
 
 RESULT handleExternInstruction(const char *fileName, long lineNum, char *line, list_t *symbolsList);
@@ -23,7 +23,7 @@ RESULT handleEntryInstruction(const char *fileName, long lineNum, char *line, li
 RESULT handleDataInstruction(const char *fileName, long lineNum, char *line, char *label, list_t *symbolsList, list_t *dataList);
 RESULT handleStringInstruction(const char *fileName, long lineNum, char *line, char *label, list_t *symbolsList, list_t *dataList);
 
-RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsList, list_t *instructionsList, list_t *dataList, list_t *entriesList) {
+RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsList, list_t *wordList, list_t *dataList, list_t *entriesList) {
     char * token;
     int i;
     char * label = NULL;
@@ -62,7 +62,7 @@ RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsL
             if (*token == '.') {
                 result = handleInstruction(fileName, lineNum, token, line, label, symbolsList, dataList, entriesList);
             } else {
-                result = handleCommand(fileName, lineNum, token, line, label, symbolsList, instructionsList);
+                result = handleCommand(fileName, lineNum, token, line, label, symbolsList, wordList);
             }
         }
     }
@@ -304,7 +304,7 @@ RESULT handleStringInstruction(const char *fileName, long lineNum, char *line, c
     return SUCCESS;
 }
 
-RESULT handleCommand(const char *fileName, long lineNum, char *command, char *line, char *label, list_t *symbolsList, list_t *instructionsList){
+RESULT handleCommand(const char *fileName, long lineNum, char *command, char *line, char *label, list_t *symbolsList, list_t *wordList){
     char * token;
     char * origOper;
     char * destOper;
@@ -373,9 +373,9 @@ RESULT handleCommand(const char *fileName, long lineNum, char *command, char *li
             handleAllocError();
         word->type = WORD_TYPE_INSTRUCTION;
         word->content.instruction = instruction;
-        addNode(instructionsList, word);
+        addNode(wordList, word);
         if (label != NULL){
-            if(addSymbolToList(symbolsList, CODE, label, instructionsList->length-1) == 0){
+            if(addSymbolToList(symbolsList, CODE, label, wordList->length-1) == 0){
                 printErrorWithLine(fileName, lineNum, "label '%s' is already defined and cannot be redefined!\n", label);
                 return ERROR; /*duplication in symbol with different type*/
             }
@@ -390,7 +390,7 @@ RESULT handleCommand(const char *fileName, long lineNum, char *command, char *li
                 word->content.address = malloc(sizeof(address_t));
                 if(word->content.address == NULL)
                     handleAllocError();
-                word->content.address->address = atoi(origOper+1);
+                word->content.address->addressValue = atoi(origOper + 1);
                 word->content.address->are_type = A;
             } else {
                 word->type = WORD_TYPE_LABEL;
@@ -400,13 +400,13 @@ RESULT handleCommand(const char *fileName, long lineNum, char *command, char *li
                 word->content.label->lineNumber = lineNum;
                 if(*origOper == '&')
                     origOper++;
-                word->content.label->label = malloc((strlen(origOper)+1) * sizeof(char));
-                if(word->content.label->label == NULL)
+                word->content.label->labelName = malloc((strlen(origOper) + 1) * sizeof(char));
+                if(word->content.label->labelName == NULL)
                     handleAllocError();
-                strcpy(word->content.label->label, (origOper));
+                strcpy(word->content.label->labelName, (origOper));
                 word->content.label->addressing_type = instruction->origin_addressing;
             }
-            addNode(instructionsList, word);
+            addNode(wordList, word);
         }
         if (result & APPEND_FOR_DEST){
             word = malloc(sizeof(word_t));
@@ -417,7 +417,7 @@ RESULT handleCommand(const char *fileName, long lineNum, char *command, char *li
                 word->content.address = malloc(sizeof(address_t));
                 if(word->content.address == NULL)
                     handleAllocError();
-                word->content.address->address = atoi(destOper+1);
+                word->content.address->addressValue = atoi(destOper + 1);
                 word->content.address->are_type = A;
             } else {
                 word->type = WORD_TYPE_LABEL;
@@ -427,13 +427,13 @@ RESULT handleCommand(const char *fileName, long lineNum, char *command, char *li
                 word->content.label->lineNumber = lineNum;
                 if(*destOper == '&')
                     destOper++;
-                word->content.label->label = malloc((strlen(destOper)+1) * sizeof(char));
-                if(word->content.label->label == NULL)
+                word->content.label->labelName = malloc((strlen(destOper) + 1) * sizeof(char));
+                if(word->content.label->labelName == NULL)
                     handleAllocError();
-                strcpy(word->content.label->label, destOper);
+                strcpy(word->content.label->labelName, destOper);
                 word->content.label->addressing_type = instruction->dest_addressing;
             }
-            addNode(instructionsList, word);
+            addNode(wordList, word);
         }
     }
 

@@ -1,5 +1,5 @@
-#ifndef MMN14_INSTRUCTIONS_H
-#define MMN14_INSTRUCTIONS_H
+#ifndef MMN14_WORDS_H
+#define MMN14_WORDS_H
 
 typedef enum {E = 1, R = 2, A = 4} ARE_TYPE;
 typedef enum {WORD_TYPE_INSTRUCTION, WORD_TYPE_ADDRESS, WORD_TYPE_LABEL} WORD_TYPE;
@@ -17,11 +17,11 @@ typedef struct{
 
 typedef struct{
     unsigned int are_type: 3;
-    unsigned long address;
+    unsigned long addressValue;
 } address_t;
 
 typedef struct {
-    char *label;
+    char *labelName;
     long lineNumber;
     ADDRESSING_TYPE addressing_type;
 } label_t;

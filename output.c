@@ -4,7 +4,7 @@
 #include "output.h"
 #include "definitions.h"
 #include "errors.h"
-#include "instructions.h"
+#include "words.h"
 #include "entries.h"
 #include "extern.h"
 #include "data.h"
@@ -12,8 +12,8 @@
 unsigned long getWordAsLong(word_t *word);
 void removeOutputFile(const char * baseFileName, char * suffix);
 void getFullFileName(char ** fullFileName, const char * baseFileName, char * suffix);
-void writeMainOutput(const char * baseFileName, list_t *instructionsList, list_t *dataList);
-void writeMainOutputData(FILE *outputFile, list_t *instructionsList, list_t *dataList);
+void writeMainOutput(const char * baseFileName, list_t *wordList, list_t *dataList);
+void writeMainOutputData(FILE *outputFile, list_t *wordList, list_t *dataList);
 void writeEntriesOutput(const char * baseFileName, list_t *entriesList);
 void writeEntriesOutputData(FILE *outputFile, list_t *entriesList);
 void writeExternsOutput(const char * baseFileName, list_t *externalsList);
@@ -21,13 +21,13 @@ void writeExternsOutputData(FILE *outputFile, list_t *externalsList);
 
 /*a function to write the output files.
  * param baseFileName - the base file name that is currently being parsed
- * param instructionsList - a pointer to the instruction list
+ * param wordList - a pointer to the instruction list
  * param dataList - a pointer to the data list
  * param entriesList - a pointer to the entries list
  * param externsList - a pointer to the externs list */
-void writeOutputFiles(const char *baseFileName, list_t *instructionsList, list_t *dataList, list_t *entriesList, list_t *externsList){
+void writeOutputFiles(const char *baseFileName, list_t *wordList, list_t *dataList, list_t *entriesList, list_t *externsList){
     /* output object file */
-    writeMainOutput(baseFileName, instructionsList, dataList);
+    writeMainOutput(baseFileName, wordList, dataList);
 
     /* output entries file */
     writeEntriesOutput(baseFileName, entriesList);
@@ -39,9 +39,9 @@ void writeOutputFiles(const char *baseFileName, list_t *instructionsList, list_t
 
 /*a function to write the main output file (.ob).
  * param baseFileName - the base file name that is currently being parsed
- * param instructionsList - a pointer to the instruction list
+ * param wordList - a pointer to the instruction list
  * param dataList - a pointer to the data list*/
-void writeMainOutput(const char * baseFileName, list_t *instructionsList, list_t *dataList){
+void writeMainOutput(const char * baseFileName, list_t *wordList, list_t *dataList){
     char *fullFileName;
     FILE *outputFile;
 
@@ -52,7 +52,7 @@ void writeMainOutput(const char * baseFileName, list_t *instructionsList, list_t
     if(outputFile == NULL)
         printError(baseFileName, "Cannot write to file '%s'!\n", fullFileName);
     else {
-        writeMainOutputData(outputFile, instructionsList, dataList);
+        writeMainOutputData(outputFile, wordList, dataList);
         fclose(outputFile);
     }
     free(fullFileName); /*free the memory allocated by getFullFileName*/
@@ -61,18 +61,18 @@ void writeMainOutput(const char * baseFileName, list_t *instructionsList, list_t
 /*a function to write the main output file's data (.ob).
  * the function iterates the instructions and the data lists and print each of the instructions and then each of the data
  * param outputFile - the output file's FILE pointer
- * param instructionsList - a pointer to the instruction list
+ * param wordList - a pointer to the instruction list
  * param dataList - a pointer to the data list*/
-void writeMainOutputData(FILE *outputFile, list_t *instructionsList, list_t *dataList) {
+void writeMainOutputData(FILE *outputFile, list_t *wordList, list_t *dataList) {
     data_word_t *data;
     node_t *currentNode;
     unsigned long wordAddress = START_ADDRESS;
 
     /* write file header */
-    fprintf(outputFile, "%d %d\n", instructionsList->length, dataList->length);
+    fprintf(outputFile, "%d %d\n", wordList->length, dataList->length);
 
     /* write instructions */
-    currentNode = instructionsList->head;
+    currentNode = wordList->head;
     while(currentNode != NULL){
         fprintf(outputFile, "%07lu %06lx\n", wordAddress, getWordAsLong(currentNode->content) & 0xffffff);
         currentNode = currentNode->next;
@@ -224,7 +224,7 @@ unsigned long getWordAsLong(word_t *word) {
             bitFieldValue += word->content.instruction->are_type;
             break;
         case WORD_TYPE_ADDRESS:
-            bitFieldValue += word->content.address->address;
+            bitFieldValue += word->content.address->addressValue;
             bitFieldValue <<= 3U;
             bitFieldValue += word->content.address->are_type;
             break;

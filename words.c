@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "instructions.h"
+#include "words.h"
 
 /* free all the memory allocated to a word_t */
 void freeWordContent(void *con){
@@ -25,7 +25,7 @@ void freeInstructionContent(instruction_t *instruction){
 
 /* free all the memory allocated to a label_t */
 void freeLabelContent(label_t *label){
-    free(label->label);
+    free(label->labelName);
     free(label);
 }
 
