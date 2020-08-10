@@ -1,7 +1,7 @@
 #include "parser.h"
+#include "words.h"
 #include "actions.h"
 #include "symbols.h"
-#include "words.h"
 #include "data.h"
 #include "entries.h"
 #include "errors.h"
@@ -23,7 +23,11 @@ RESULT handleEntryInstruction(const char *fileName, long lineNum, char *line, li
 RESULT handleDataInstruction(const char *fileName, long lineNum, char *line, char *label, list_t *symbolsList, list_t *dataList);
 RESULT handleStringInstruction(const char *fileName, long lineNum, char *line, char *label, list_t *symbolsList, list_t *dataList);
 
-RESULT parseLine(const char *fileName, char *line, int lineNum, list_t *symbolsList, list_t *wordList, list_t *dataList, list_t *entriesList) {
+void appendWord(long lineNum, ADDRESSING_TYPE addressingType, const char *oper, list_t *wordList);
+
+char *strtok_r (char *s, const char *delim, char **save_ptr);
+
+RESULT parseLine(const char *fileName, char *line, long lineNum, list_t *symbolsList, list_t *wordList, list_t *dataList, list_t *entriesList) {
     char * token;
     int i;
     char * label = NULL;
@@ -229,8 +233,9 @@ RESULT handleDataInstruction(const char *fileName, long lineNum, char *line, cha
             }
         }
     }
+
     while((token = strtok_r(line, ",", &line))){ /*splitting by ,*/
-        if(line && strlen(line) < 1){ /*nothing was after the comma*/
+        if(line && strlen(line) == 0){ /*nothing was after the comma*/
             printErrorWithLine(fileName, lineNum, "Missing operand!\n", NULL);
             return ERROR;
         }
@@ -382,60 +387,74 @@ RESULT handleCommand(const char *fileName, long lineNum, char *command, char *li
         }
 
         if (result & APPEND_FOR_ORIG){
-            word = malloc(sizeof(word_t));
-            if(word == NULL)
-                handleAllocError();
-            if (instruction->origin_addressing == ADDRESSING_TYPE_IMMEDIATE){
-                word->type = WORD_TYPE_ADDRESS;
-                word->content.address = malloc(sizeof(address_t));
-                if(word->content.address == NULL)
-                    handleAllocError();
-                word->content.address->addressValue = atoi(origOper + 1);
-                word->content.address->are_type = A;
-            } else {
-                word->type = WORD_TYPE_LABEL;
-                word->content.label = malloc(sizeof(label_t));
-                if(word->content.label == NULL)
-                    handleAllocError();
-                word->content.label->lineNumber = lineNum;
-                if(*origOper == '&')
-                    origOper++;
-                word->content.label->labelName = malloc((strlen(origOper) + 1) * sizeof(char));
-                if(word->content.label->labelName == NULL)
-                    handleAllocError();
-                strcpy(word->content.label->labelName, (origOper));
-                word->content.label->addressing_type = instruction->origin_addressing;
-            }
-            addNode(wordList, word);
+            appendWord(lineNum, instruction->origin_addressing, origOper, wordList);
         }
         if (result & APPEND_FOR_DEST){
-            word = malloc(sizeof(word_t));
-            if(word == NULL)
-                handleAllocError();
-            if (instruction->dest_addressing == ADDRESSING_TYPE_IMMEDIATE){
-                word->type = WORD_TYPE_ADDRESS;
-                word->content.address = malloc(sizeof(address_t));
-                if(word->content.address == NULL)
-                    handleAllocError();
-                word->content.address->addressValue = atoi(destOper + 1);
-                word->content.address->are_type = A;
-            } else {
-                word->type = WORD_TYPE_LABEL;
-                word->content.label = malloc(sizeof(label_t));
-                if(word->content.label == NULL)
-                    handleAllocError();
-                word->content.label->lineNumber = lineNum;
-                if(*destOper == '&')
-                    destOper++;
-                word->content.label->labelName = malloc((strlen(destOper) + 1) * sizeof(char));
-                if(word->content.label->labelName == NULL)
-                    handleAllocError();
-                strcpy(word->content.label->labelName, destOper);
-                word->content.label->addressing_type = instruction->dest_addressing;
-            }
-            addNode(wordList, word);
+            appendWord(lineNum, instruction->dest_addressing, destOper, wordList);
         }
     }
 
     return SUCCESS;
+}
+
+
+void appendWord(long lineNum, ADDRESSING_TYPE addressingType, const char *oper, list_t *wordList){
+    word_t *word = malloc(sizeof(word_t));
+    if(word == NULL)
+        handleAllocError();
+    if (addressingType == ADDRESSING_TYPE_IMMEDIATE){
+        word->type = WORD_TYPE_ADDRESS;
+        word->content.address = malloc(sizeof(address_t));
+        if(word->content.address == NULL)
+            handleAllocError();
+        word->content.address->addressValue = atoi(oper + 1);
+        word->content.address->are_type = A;
+    } else {
+        word->type = WORD_TYPE_LABEL;
+        word->content.label = malloc(sizeof(label_t));
+        if(word->content.label == NULL)
+            handleAllocError();
+        word->content.label->lineNumber = lineNum;
+        if(*oper == '&')
+            oper++;
+        word->content.label->labelName = malloc((strlen(oper) + 1) * sizeof(char));
+        if(word->content.label->labelName == NULL)
+            handleAllocError();
+        strcpy(word->content.label->labelName, oper);
+        word->content.label->addressing_type = addressingType;
+    }
+    addNode(wordList, word);
+}
+
+
+char *strtok_r (char *s, const char *delim, char **save_ptr){
+    char *end;
+
+    if (s == NULL)
+        s = *save_ptr;
+
+    if (*s == '\0'){
+        *save_ptr = s;
+        return NULL;
+    }
+
+    /* Scan leading delimiters.  */
+    s += strspn (s, delim);
+    if (*s == '\0'){
+        *save_ptr = s;
+        return NULL;
+    }
+
+    /* Find the end of the token.  */
+    end = s + strcspn (s, delim);
+
+    if (*end == '\0'){
+        *save_ptr = end;
+        return s;
+    }
+
+    /* Terminate the token and make *SAVE_PTR point past it.  */
+    *end = '\0';
+    *save_ptr = end + 1;
+    return s;
 }

@@ -24,7 +24,7 @@ void correctSymbolsAddresses(list_t *symbolsList, int IC);
 RESULT firstPass(const char *fileName, FILE *file, list_t *symbolsList, list_t *wordList, list_t *dataList,
                  list_t *entriesList) {
     char line[MAX_LINE_LENGTH+3];
-    int lineNum = 1;
+    long lineNum = 1;
     RESULT result = SUCCESS;
     size_t length;
 
