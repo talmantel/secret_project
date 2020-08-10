@@ -4,7 +4,6 @@
 #include "linked_list.h"
 
 RESULT secondPass(const char *fileName, list_t *symbolsList, list_t *instructionsList, list_t *entriesList,
-                  list_t *externalsList);
-
+                  list_t *externsList);
 
 #endif

@@ -1,18 +1,26 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include "first_pass.h"
 #include "parser.h"
 #include "symbols.h"
 #include "errors.h"
 
+/*helper macros to convert input to string*/
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
 
 int finishReadingLine(FILE *file);
-
 void correctSymbolsAddresses(list_t *symbolsList, int IC);
 
+/*this function is doing the first pass part of the file's parsing and assembling.
+ * the function read the file line by line and passes the line to parseLine.
+ * returns ERROR if there was an error while parsing the file in the first pass, and SUCCESS otherwise
+ * param fileName - the file name that is currently being parsed
+ * param lineNum - the line number that is currently being parsed
+ * param symbolsList - a pointer to symbols list
+ * param instructionsList - a pointer to instruction list
+ * param dataList - a pointer to data list
+ * param entriesList - a pointer to entries list*/
 RESULT firstPass(const char *fileName, FILE *file, list_t *symbolsList, list_t *instructionsList, list_t *dataList,
                  list_t *entriesList) {
     char line[MAX_LINE_LENGTH+3];
@@ -36,7 +44,7 @@ RESULT firstPass(const char *fileName, FILE *file, list_t *symbolsList, list_t *
 
 
         if(length > MAX_LINE_LENGTH){
-            printError(fileName, lineNum, "Line longer than maximum length %s!\n", STR(MAX_LINE_LENGTH));
+            printErrorWithLine(fileName, lineNum, "Line longer than maximum length %s!\n", STR(MAX_LINE_LENGTH));
             result = ERROR;
             if(finishReadingLine(file) == EOF)
                 break;
@@ -54,6 +62,9 @@ RESULT firstPass(const char *fileName, FILE *file, list_t *symbolsList, list_t *
     return result;
 }
 
+/*a function that corrects the symbols' addresses in the symbols' list, at the end of the first pass.
+ * param symbolsList - a pointer to the symbols list.
+ * param IC - the instruction counter*/
 void correctSymbolsAddresses(list_t *symbolsList, int IC){
     node_t *currentNode;
     symbol_t *symbol;
@@ -74,7 +85,8 @@ void correctSymbolsAddresses(list_t *symbolsList, int IC){
     }
 }
 
-/* read until end of line or EOF, returns last character read */
+/* read until end of line or EOF, returns last character read
+ * param file - a pointer to FILE object to be read.*/
 int finishReadingLine(FILE *file){
     int c;
 

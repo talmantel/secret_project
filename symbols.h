@@ -4,6 +4,7 @@
 
 typedef enum {CODE, DATA, EXTERNAL} SYMBOL_TYPE;
 
+/* a struct to represent a symbol*/
 typedef struct{
     char *name;
     unsigned long address;
@@ -12,7 +13,6 @@ typedef struct{
 
 
 int compareSymbol(void * find, void * content);
-
 void freeSymbolContent(void *content);
 
 

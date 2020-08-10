@@ -3,7 +3,8 @@
 
 #define ERROR_OUTPUT_FILE stdout
 
-void handleMallocError();
-void printError(const char *fileName, long lineNum, const char *format, const void *value);
+void handleAllocError();
+void printErrorWithLine(const char *fileName, long lineNum, const char *format, const void *value);
+void printError(const char *fileName, const char *format, const void *value);
 
 #endif

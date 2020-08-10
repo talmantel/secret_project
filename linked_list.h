@@ -1,11 +1,13 @@
 #ifndef MMN14_LINKED_LIST_H
 #define MMN14_LINKED_LIST_H
 
+/* a struct that represent a generic node in the list*/
 typedef struct node{
     void *content;
     struct node * next;
 } node_t;
 
+/* a struct that represent a list*/
 typedef struct list{
     int length;
     node_t * head;
