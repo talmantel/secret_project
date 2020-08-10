@@ -6,111 +6,65 @@
 #include "errors.h"
 #include "instructions.h"
 #include "entries.h"
-#include "externals.h"
+#include "extern.h"
 #include "data.h"
 
-void writeMainOutput(FILE *outputFile, list_t *instructionsList, list_t *dataList);
-void writeEntriesOutput(FILE *outputFile, list_t *entriesList);
-void writeExternalsOutput(FILE *outputFile, list_t *externalsList);
 unsigned long getWordAsLong(word_t *word);
+void removeOutputFile(const char * baseFileName, char * suffix);
+void getFullFileName(char ** fullFileName, const char * baseFileName, char * suffix);
+void writeMainOutput(const char * baseFileName, list_t *instructionsList, list_t *dataList);
+void writeMainOutputData(FILE *outputFile, list_t *instructionsList, list_t *dataList);
+void writeEntriesOutput(const char * baseFileName, list_t *entriesList);
+void writeEntriesOutputData(FILE *outputFile, list_t *entriesList);
+void writeExternsOutput(const char * baseFileName, list_t *externalsList);
+void writeExternsOutputData(FILE *outputFile, list_t *externalsList);
 
-void outputFiles(const char *baseFileName, list_t *instructionsList, list_t *dataList, list_t *entriesList, list_t *externalsList){
-    char *currentFileName;
-    FILE *outputFile;
-
+/*a function to write the output files.
+ * param baseFileName - the base file name that is currently being parsed
+ * param instructionsList - a pointer to the instruction list
+ * param dataList - a pointer to the data list
+ * param entriesList - a pointer to the entries list
+ * param externsList - a pointer to the externs list */
+void writeOutputFiles(const char *baseFileName, list_t *instructionsList, list_t *dataList, list_t *entriesList, list_t *externsList){
     /* output object file */
-    currentFileName = malloc((strlen(baseFileName) + strlen(MAIN_OUTPUT_FILE_SUFFIX) + 1) * sizeof(char));
-    if(currentFileName == NULL)
-        handleMallocError();
-
-    strcpy(currentFileName, baseFileName);
-    strcat(currentFileName, MAIN_OUTPUT_FILE_SUFFIX);
-
-    outputFile = fopen(currentFileName, "w");
-
-    if(outputFile == NULL)
-        printError(baseFileName, -1, "Cannot write to file '%s'!\n", currentFileName);
-    else {
-        writeMainOutput(outputFile, instructionsList, dataList);
-        fclose(outputFile);
-    }
+    writeMainOutput(baseFileName, instructionsList, dataList);
 
     /* output entries file */
-    if(entriesList->length > 0) {
-        currentFileName = realloc(currentFileName, (strlen(baseFileName) + strlen(ENTRIES_FILE_SUFFIX) + 1) * sizeof(char));
-        if (currentFileName == NULL)
-            handleMallocError();
+    writeEntriesOutput(baseFileName, entriesList);
 
-        strcpy(currentFileName, baseFileName);
-        strcat(currentFileName, ENTRIES_FILE_SUFFIX);
+    /* output externs file */
+    writeExternsOutput(baseFileName, externsList);
 
-        outputFile = fopen(currentFileName, "w");
-
-        if (outputFile == NULL)
-            printError(baseFileName, -1, "Cannot write to file '%s'!\n", currentFileName);
-        else {
-            writeEntriesOutput(outputFile, entriesList);
-            fclose(outputFile);
-        }
-    }
-
-    /* output externals file */
-    if(externalsList->length > 0) {
-        currentFileName = realloc(currentFileName, (strlen(baseFileName) + strlen(EXTERNALS_FILE_SUFFIX) + 1) * sizeof(char));
-        if (currentFileName == NULL)
-            handleMallocError();
-
-        strcpy(currentFileName, baseFileName);
-        strcat(currentFileName, EXTERNALS_FILE_SUFFIX);
-
-        outputFile = fopen(currentFileName, "w");
-
-        if (outputFile == NULL)
-            printError(baseFileName, -1, "Cannot write to file '%s'!\n", currentFileName);
-        else{
-            writeExternalsOutput(outputFile, externalsList);
-            fclose(outputFile);
-        }
-    }
-
-    free(currentFileName);
 }
 
-void removeFiles(const char *baseFileName){
-    char *currentFileName;
+/*a function to write the main output file (.ob).
+ * param baseFileName - the base file name that is currently being parsed
+ * param instructionsList - a pointer to the instruction list
+ * param dataList - a pointer to the data list*/
+void writeMainOutput(const char * baseFileName, list_t *instructionsList, list_t *dataList){
+    char *fullFileName;
+    FILE *outputFile;
 
-    /* object file */
-    currentFileName = malloc((strlen(baseFileName) + strlen(MAIN_OUTPUT_FILE_SUFFIX) + 1) * sizeof(char));
-    if(currentFileName == NULL)
-        handleMallocError();
+    getFullFileName(&fullFileName, baseFileName, MAIN_OUTPUT_FILE_SUFFIX);
 
-    strcpy(currentFileName, baseFileName);
-    strcat(currentFileName, MAIN_OUTPUT_FILE_SUFFIX);
-    remove(currentFileName);
+    outputFile = fopen(fullFileName, "w");
 
-    /* entries file */
-    currentFileName = realloc(currentFileName, (strlen(baseFileName) + strlen(ENTRIES_FILE_SUFFIX) + 1) * sizeof(char));
-    if(currentFileName == NULL)
-        handleMallocError();
-
-    strcpy(currentFileName, baseFileName);
-    strcat(currentFileName, ENTRIES_FILE_SUFFIX);
-    remove(currentFileName);
-
-    /* externals file */
-    currentFileName = realloc(currentFileName, (strlen(baseFileName) + strlen(EXTERNALS_FILE_SUFFIX) + 1) * sizeof(char));
-    if(currentFileName == NULL)
-        handleMallocError();
-
-    strcpy(currentFileName, baseFileName);
-    strcat(currentFileName, EXTERNALS_FILE_SUFFIX);
-    remove(currentFileName);
-
-    free(currentFileName);
+    if(outputFile == NULL)
+        printError(baseFileName, "Cannot write to file '%s'!\n", fullFileName);
+    else {
+        writeMainOutputData(outputFile, instructionsList, dataList);
+        fclose(outputFile);
+    }
+    free(fullFileName); /*free the memory allocated by getFullFileName*/
 }
 
-void writeMainOutput(FILE *outputFile, list_t *instructionsList, list_t *dataList) {
-    data_t *data;
+/*a function to write the main output file's data (.ob).
+ * the function iterates the instructions and the data lists and print each of the instructions and then each of the data
+ * param outputFile - the output file's FILE pointer
+ * param instructionsList - a pointer to the instruction list
+ * param dataList - a pointer to the data list*/
+void writeMainOutputData(FILE *outputFile, list_t *instructionsList, list_t *dataList) {
+    data_word_t *data;
     node_t *currentNode;
     unsigned long wordAddress = START_ADDRESS;
 
@@ -135,8 +89,33 @@ void writeMainOutput(FILE *outputFile, list_t *instructionsList, list_t *dataLis
     }
 }
 
+/*a function to write the entries output file (.ent).
+ * param baseFileName - the base file name that is currently being parsed
+ * param entriesList - a pointer to the entries list */
+void writeEntriesOutput(const char * baseFileName, list_t *entriesList){
+    char *fullFileName;
+    FILE *outputFile;
 
-void writeEntriesOutput(FILE *outputFile, list_t *entriesList) {
+    if(entriesList->length > 0) {
+        getFullFileName(&fullFileName, baseFileName, ENTRIES_FILE_SUFFIX);
+
+        outputFile = fopen(fullFileName, "w");
+
+        if (outputFile == NULL)
+            printError(baseFileName, "Cannot write to file '%s'!\n", fullFileName);
+        else {
+            writeEntriesOutputData(outputFile, entriesList);
+            fclose(outputFile);
+        }
+        free(fullFileName); /*free the memory allocated by getFullFileName*/
+    }
+}
+
+/*a function to write the entries output file's data (.ent).
+ * the function iterates the entries list and print each of the entries
+ * param outputFile - the output file's FILE pointer
+ * param entriesList - a pointer to the entries list */
+void writeEntriesOutputData(FILE *outputFile, list_t *entriesList) {
     entry_t *entry;
     node_t *currentNode;
     currentNode = entriesList->head;
@@ -147,8 +126,34 @@ void writeEntriesOutput(FILE *outputFile, list_t *entriesList) {
     }
 }
 
-void writeExternalsOutput(FILE *outputFile, list_t *externalsList) {
-    external_t *external;
+/*a function to write the externs output file (.ext).
+ * param baseFileName - the base file name that is currently being parsed
+ * param externsList - a pointer to the externs list */
+void writeExternsOutput(const char * baseFileName, list_t *externalsList){
+    char *fullFileName;
+    FILE *outputFile;
+
+    if(externalsList->length > 0) {
+        getFullFileName(&fullFileName, baseFileName, EXTERNS_FILE_SUFFIX);
+
+        outputFile = fopen(fullFileName, "w");
+
+        if (outputFile == NULL)
+            printError(baseFileName, "Cannot write to file '%s'!\n", fullFileName);
+        else{
+            writeExternsOutputData(outputFile, externalsList);
+            fclose(outputFile);
+        }
+        free(fullFileName); /*free the memory allocated by getFullFileName*/
+    }
+}
+
+/*a function to write the externs output file's data (.ext).
+ * the function iterates the externs list and print each of the externs
+ * param outputFile - the output file's FILE pointer
+ * param externsList - a pointer to the externs list */
+void writeExternsOutputData(FILE *outputFile, list_t *externalsList) {
+    extern_t *external;
     node_t *currentNode;
     currentNode = externalsList->head;
     while(currentNode != NULL){
@@ -158,8 +163,48 @@ void writeExternalsOutput(FILE *outputFile, list_t *externalsList) {
     }
 }
 
+/* a function to remove all the output files if they are already exist
+ * param baseFileName - the base file name that is currently being parsed */
+void removeOutputFiles(const char *baseFileName){
+    /* object file */
+    removeOutputFile(baseFileName, MAIN_OUTPUT_FILE_SUFFIX);
 
-/* Calculate the long value of a word */
+    /* entries file */
+    removeOutputFile(baseFileName, ENTRIES_FILE_SUFFIX);
+
+    /* externs file */
+    removeOutputFile(baseFileName, EXTERNS_FILE_SUFFIX);
+}
+
+/* a function to remove an output file if he is already exists
+ * param baseFileName - the base file name that is currently being parsed
+ * param suffix - the suffix of the file that needs to be deleted */
+void removeOutputFile(const char * baseFileName, char * suffix){
+    char *fullFileName;
+    getFullFileName(&fullFileName, baseFileName, suffix);
+
+    remove(fullFileName);
+
+    free(fullFileName); /*free the memory allocated by getFullFileName*/
+}
+
+/* a function to build the full file name from the base file name and the suffix.
+ * param fullFileName - a pointer to where the full file name will be stored
+ * param baseFileName - the base file name that is currently being parsed
+ * param suffix - the suffix of the file that needs to be deleted */
+void getFullFileName(char **fullFileName, const char * baseFileName, char * suffix){
+    /*base name size + suffix size + 1 for null terminator*/
+    *fullFileName = malloc((strlen(baseFileName) + strlen(suffix) + 1) * sizeof(char));
+    if(*fullFileName == NULL)
+        handleAllocError();
+
+    /*building the full name of the file */
+    strcpy(*fullFileName, baseFileName);
+    strcat(*fullFileName, suffix);
+}
+
+/* Calculate the long value of a word  and returns the result
+ * param word - a pointer to the word that need to be calculated*/
 unsigned long getWordAsLong(word_t *word) {
     unsigned long bitFieldValue = 0;
     switch (word->type) {

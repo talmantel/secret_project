@@ -1,7 +1,3 @@
-//
-// Created by tal on 6/26/2020.
-//
-
 #ifndef MMN14_INSTRUCTIONS_H
 #define MMN14_INSTRUCTIONS_H
 
