@@ -13,7 +13,7 @@ int compareSymbol(void * find, void * content){
 }
 
 /*function to free the symbol_t's content that was allocated
- * param content - pointer to symbol_t object that should be free.*/
+ * param content - pointer to symbol_t object that should be freed.*/
 void freeSymbolContent(void *content){
     free(((symbol_t *)content)->name);
     free((symbol_t *)content);

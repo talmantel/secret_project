@@ -4,7 +4,7 @@
 #include "errors.h"
 
 /*a function to handle a memory allocating error.
- * when this error occurs - print an error to stderr and exit the program*/
+ * when this error occurs - print an error and exit the program*/
 void handleAllocError() {
     fprintf(ERROR_OUTPUT_FILE, "FATAL ERROR: Out of memory\n");
     exit(1);

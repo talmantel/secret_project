@@ -28,7 +28,7 @@ void appendWord(long lineNum, ADDRESSING_TYPE addressingType, const char *oper, 
 char *strtok_r (char *s, const char *delim, char **save_ptr);
 
 /*this function parses a line.
- * the function returns ERROR if any error occured and SUCCESS otherwise.
+ * the function returns ERROR if any error occurred and SUCCESS otherwise.
  * param fileName -
  * param line - the line string to be parsed
  * param lineNum -

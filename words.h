@@ -35,9 +35,16 @@ typedef struct{
     } content;
 } word_t;
 
+/* free all the memory allocated to a word_t */
 void freeWordContent(void *con);
+
+/* free all the memory allocated to a instruction_t */
 void freeInstructionContent(instruction_t *content);
+
+/* free all the memory allocated to a label_t */
 void freeLabelContent(label_t *content);
+
+/* free all the memory allocated to a address_t */
 void freeAddressContent(address_t *content);
 
 #endif

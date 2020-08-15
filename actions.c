@@ -43,8 +43,8 @@ action_t actions[NUM_OF_ACTIONS] = {
  * param fileName - the .as file we working on
  * param lineNum - the line number we are currently parsing
  * param command - the command's string
- * param origOper - the origin operand if exist
- * param destOper - the destination operand if exist
+ * param origOper - the origin operand if exists
+ * param destOper - the destination operand if exists
  * param instruction - a pointer to an instruction object to assign parameters to*/
 RESULT setCommandParameters(const char *fileName, long lineNum, char *command, char *origOper, char *destOper,
                             instruction_t *instruction) {
