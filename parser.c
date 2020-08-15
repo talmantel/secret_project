@@ -57,7 +57,7 @@ RESULT parseLine(const char *fileName, char *line, long lineNum, list_t *symbols
         return SUCCESS;
 
 
-    token = strtok_r(line, " ", &line);
+    token = strtok_r(line, WHITESPACES, &line);
 
     result = handleLabel(fileName, lineNum, token, &label);
 
@@ -69,7 +69,7 @@ RESULT parseLine(const char *fileName, char *line, long lineNum, list_t *symbols
 
         if (result != ERROR) {
             if (label != NULL) {
-                token = strtok_r(line, " ", &line);
+                token = strtok_r(line, WHITESPACES, &line);
             }
 
             if (*token == '.') {
@@ -220,7 +220,7 @@ RESULT handleInstruction(const char *fileName, long lineNum, char *instruction, 
  * param line - the rest of the line after '.entry'
  * param symbolsList - a pointer to the symbols list */
 RESULT handleExternInstruction(const char *fileName, long lineNum, char *line, list_t *symbolsList){
-    char *token = strtok_r(line, " ", &line);
+    char *token = strtok_r(line, WHITESPACES, &line);
 
     if(checkIfLegalLabel(fileName, lineNum, token) == ERROR) {
         /* error printed in checkIfLegalLabel */
@@ -232,7 +232,7 @@ RESULT handleExternInstruction(const char *fileName, long lineNum, char *line, l
                            token);
         return ERROR; /*duplication in symbol with different type*/
     }
-    token = strtok_r(line, " ", &line);
+    token = strtok_r(line, WHITESPACES, &line);
     if (token != NULL){ /*extra after label or space inside the label -> error*/
         printErrorWithLine(fileName, lineNum, "extra text '%s' after instruction!\n", token);
         return ERROR;
@@ -249,7 +249,7 @@ RESULT handleExternInstruction(const char *fileName, long lineNum, char *line, l
  * param line - the rest of the line after '.entry'
  * param entriesList - a pointer to the entries list */
 RESULT handleEntryInstruction(const char *fileName, long lineNum, char *line, list_t *entriesList){
-    char *token = strtok_r(line, " ", &line);
+    char *token = strtok_r(line, WHITESPACES, &line);
 
     if(checkIfLegalLabel(fileName, lineNum, token) == ERROR) {
         /* error printed in checkIfLegalLabel */
@@ -257,7 +257,7 @@ RESULT handleEntryInstruction(const char *fileName, long lineNum, char *line, li
     }
 
     addEntryToList(entriesList, token, lineNum); /*returning value is ignored - duplicates will be check in second pass*/
-    token = strtok_r(line, " ", &line);
+    token = strtok_r(line, WHITESPACES, &line);
     if (token != NULL){ /*extra after label -> error*/
         printErrorWithLine(fileName, lineNum, "extra text '%s' after instruction!\n", token);
         return ERROR;
@@ -410,7 +410,7 @@ RESULT handleCommand(const char *fileName, long lineNum, char *command, char *li
         /*checking if there is more in the rest of the line.*/
         if (!line || strlen(line) < 1) { /* no more  - only one operand*/
             origOper = NULL;
-            destOper = strtok_r(token, " ", &token); /*cleaning tailing spaces and checking if there was space in the middle*/
+            destOper = strtok_r(token, WHITESPACES, &token); /*cleaning tailing spaces and checking if there was space in the middle*/
             if (token && strlen(token) > 0) {  /*there was a space in the middle*/
                 printErrorWithLine(fileName, lineNum, "extra text '%s' after instruction!\n", token);
                 return ERROR;
@@ -426,7 +426,7 @@ RESULT handleCommand(const char *fileName, long lineNum, char *command, char *li
                 return ERROR;
             }
 
-            origOper = strtok_r(token, " ", &token); /*cleaning tailing spaces and checking if there was space in the middle*/
+            origOper = strtok_r(token, WHITESPACES, &token); /*cleaning tailing spaces and checking if there was space in the middle*/
 
             if (token && strlen(token) > 0 && !isOnlyWhiteSpaces(token)) {  /*there was a space in the middle*/
                 printErrorWithLine(fileName, lineNum, "Missing comma at '%s'!\n", token);
@@ -439,7 +439,7 @@ RESULT handleCommand(const char *fileName, long lineNum, char *command, char *li
                 return ERROR;
             }
 
-            destOper = strtok_r(token, " ", &token); /*cleaning tailing spaces and checking if there was space in the middle*/
+            destOper = strtok_r(token, WHITESPACES, &token); /*cleaning tailing spaces and checking if there was space in the middle*/
             if (token && strlen(token) > 0) {  /*there was a space in the middle*/
                 printErrorWithLine(fileName, lineNum, "extra text '%s' after instruction!\n", token);
                 return ERROR;

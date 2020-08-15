@@ -34,6 +34,15 @@ typedef struct {
 /*enum to hold the type of operands (origin / destination)*/
 typedef enum {ORIGIN, DESTINATION} OPERAND_SLOT;
 
+/*checking the command inserted and setting the opcode and funct
+ * if no matching action has been found returning ERROR.
+ * otherwise continue checking the operands inserted
+ * param fileName - the .as file we working on
+ * param lineNum - the line number we are currently parsing
+ * param command - the command's string
+ * param origOper - the origin operand if exist
+ * param destOper - the destination operand if exist
+ * param instruction - a pointer to an instruction object to assign parameters to*/
 RESULT setCommandParameters(const char *fileName, long lineNum, char *command, char *origOper, char *destOper,
                             instruction_t *instruction);
 

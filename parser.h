@@ -4,6 +4,8 @@
 #include "linked_list.h"
 #include "definitions.h"
 
+#define WHITESPACES " \t"
+
 RESULT parseLine(const char *fileName, char *line, long lineNum, list_t *symbolsList, list_t *wordList, list_t *dataList, list_t *entriesList);
 
 #endif

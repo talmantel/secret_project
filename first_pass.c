@@ -37,7 +37,9 @@ RESULT firstPass(const char *fileName, FILE *file, list_t *symbolsList, list_t *
             line[--length] = '\0';
         }
 
-        /* TODO remove! this is to remove \r that appears in fgets result on windows only! (since it creates issues with printf) */
+        /* Checking for \r because line breaks in Windows are \r\n, instead of just \n in linux.
+         * Also, some of our test files were written in Windows, and copying them into linux keeps the \r\n, and we couldn't get rid of it.
+         */
         if (length > 0 && line[length - 1] == '\r') {
             line[--length] = '\0';
         }

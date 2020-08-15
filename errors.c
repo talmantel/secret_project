@@ -49,6 +49,8 @@ void printError(const char *fileName, const char *format, const void *value){
         handleAllocError();
     strcpy(errorFormat, formatPrefix);
 
+    strcat(errorFormat, format);
+
     if (value == NULL)
         fprintf(ERROR_OUTPUT_FILE, errorFormat, fileName);
     else

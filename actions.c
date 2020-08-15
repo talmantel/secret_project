@@ -131,7 +131,7 @@ RESULT checkOperands(const char *fileName, long lineNum, instruction_t *instruct
 RESULT checkOperand(const char *fileName, long lineNum, instruction_t *instruction, const char *operand,
                     allowedAdd_t allowedAddressing, OPERAND_SLOT operandSlot) {
     ADDRESSING_TYPE addressingType;
-    int i, reg = 0, shouldAppend = 1;
+    int reg = 0, shouldAppend = 1;
 
     if (operand[0] == '&'){ /*addressing type 2*/
         if (checkAddressingTypeTwo(fileName, lineNum, operand, allowedAddressing) == ERROR){
